@@ -34,11 +34,11 @@
         		for (var j = 0; j < this.mapchip.map[i].length; ++j) {
         			var drawingMapChipID = this.mapchip.map[i][j];
 
-        			var srcRect = this.mapchip.getFrame(drawingMapChipID, 0);//this.currentFrame);
+        			var srcRect = this.mapchip.getFrame(drawingMapChipID, 4);//this.currentFrame);
         			var element = this.mapchip.images[drawingMapChipID].element;
 
-        			var dx = -this.width*this.originX  + (j*this.mapchip.chips[drawingMapChipID].width);
-        			var dy = -this.height*this.originY + (i*this.mapchip.chips[drawingMapChipID].height);
+        			var dx = -this.width*this.originX  + (j*this.mapChipWidth);
+        			var dy = -this.height*this.originY + (i*this.mapChipHeight);
 
         			// http://www.html5.jp/canvas/ref/method/drawImage.html
 		            canvas.drawImage(

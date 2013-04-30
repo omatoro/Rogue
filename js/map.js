@@ -14,7 +14,7 @@
 	ns.Map = tm.createClass({
 		superClass : ns.MapSprite,
 
-		init: function () {
+		init: function (pad) {
 			var mapchip = ns.MapChip({
                 image: "Grass1_pipo",
                 chips: {
@@ -42,7 +42,39 @@
 				]
             });
 
-            this.superInit(mapchip, 32, 32);
+            this.superInit(mapchip, 64, 64);
+
+            // キャラではなくマップが移動する 向いている方向を保持
+            this.velocity = tm.geom.Vector2(0, 0);
+
+            // padがあれば追加する
+            this.pad = pad || false;
+
+            // 移動スピード
+            this.speed = 0;
+		},
+
+		update: function (app) {
+            var angle = app.keyboard.getKeyAngle();
+            if (angle !== null) {
+                this.velocity.setDegree(angle, 1);
+                this.velocity.x *= -1;
+                // this.velocity.y *= -1;
+                this.speed = 6;
+            }
+            // タッチパネルによる速度設定
+            else if (this.pad && this.pad.isTouching) {
+                if   (this.pad.angle < 0) {this.pad.angle *= -1;}
+                else                      {this.pad.angle = 360 - this.pad.angle;}
+                this.velocity.setDegree(this.pad.angle, 1);
+                this.velocity.x *= -1;
+                this.velocity.y *= -1;
+                this.speed = 6;
+            }
+
+            // マップ移動
+            this.position.add( tm.geom.Vector2.mul(this.velocity, this.speed) );
+            this.speed = 0;
 		}
 
 	});

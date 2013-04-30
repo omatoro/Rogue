@@ -84,7 +84,7 @@
                 }
             });
 
-            this.superInit(IMAGE_WIDTH/IMAGE_DIVIDE_COLUMN*10, IMAGE_HEIGHT/IMAGE_DIVIDE_ROW*10, ss);
+            this.superInit(IMAGE_WIDTH/IMAGE_DIVIDE_COLUMN*4, IMAGE_HEIGHT/IMAGE_DIVIDE_ROW*4, ss);
 
             // 向いている方向を保持
             this.velocity = tm.geom.Vector2(0, 0);
@@ -110,8 +110,8 @@
             }
         },
 
-        update: function () {
-            var angle = ns.app.keyboard.getKeyAngle();
+        update: function (app) {
+            var angle = app.keyboard.getKeyAngle();
             if (angle !== null && this.isAnimation) {
                 this.velocity.setDegree(angle, 1);
                 this.velocity.y *= -1;
@@ -147,7 +147,7 @@
                     if (ANGLE_LEFT - 22.5 < angle && angle <= ANGLE_LEFT + 22.5) { this.paused = false; return false; }
                     else { return true; }
                 }
-                else if (this.currentAnimation.next.indexOf("upleft", 1) !== -1) {
+                else if (this.currentAnimation.next.indexOf("upleft", 0) !== -1) {
                     if (ANGLE_UPLEFT - 22.5 < angle && angle <= ANGLE_UPLEFT + 22.5) { this.paused = false; return false; }
                     else { return true; }
                 }

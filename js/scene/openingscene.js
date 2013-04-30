@@ -27,17 +27,17 @@
             this.superInit();
 
             // ラベル表示
-            this.fromJSON(UI_DATA.LABELS);
+            //this.fromJSON(UI_DATA.LABELS);
 
             // コントローラーパッド
             var pad = tm.controller.Pad();
             pad.position.set(80, ns.SCREEN_HEIGHT - 80);
-            this.addChild(pad);
 
             // マップ
-            this.map = ns.Map();
+            this.map = ns.Map(pad);
             this.map.position.set(ns.SCREEN_WIDTH/2, ns.SCREEN_HEIGHT/2);
             this.addChild(this.map);
+            this.addChild(pad);
 
             // プレイヤー
             this.player = ns.Player(pad);
