@@ -34,6 +34,11 @@
             pad.position.set(80, ns.SCREEN_HEIGHT - 80);
             this.addChild(pad);
 
+            // マップ
+            this.map = ns.Map();
+            this.map.position.set(ns.SCREEN_WIDTH/2, ns.SCREEN_HEIGHT/2);
+            this.addChild(this.map);
+
             // プレイヤー
             this.player = ns.Player(pad);
             this.player.position.set(ns.SCREEN_WIDTH/2, ns.SCREEN_HEIGHT/2);

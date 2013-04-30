@@ -27,7 +27,7 @@
     var IMAGE_HEIGHT = 112;
     var IMAGE_DIVIDE_COLUMN = 6;
     var IMAGE_DIVIDE_ROW    = 4;
-    var IMAGE_ANIM_COUNT    = 24;
+    var IMAGE_ANIM_COUNT    = 24; // 枚数
 
     ns.AnimationCharactor = tm.createClass({
         superClass : tm.app.AnimationSprite,
