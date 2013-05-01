@@ -34,7 +34,7 @@
         		for (var j = 0; j < this.mapchip.map[i].length; ++j) {
         			var drawingMapChipID = this.mapchip.map[i][j];
 
-        			var srcRect = this.mapchip.getFrame(drawingMapChipID, 4);//this.currentFrame);
+        			var srcRect = this.mapchip.getMapChip(drawingMapChipID, 4);//this.currentFrame);
         			var element = this.mapchip.images[drawingMapChipID].element;
 
         			var dx = -this.width*this.originX  + (j*this.mapChipWidth);
@@ -53,6 +53,63 @@
 		                this.mapChipHeight);
         		}
         	}
+        },
+
+        /**
+         * どこのマップチップに所属しているか取得
+         */
+        getBelong: function(x, y) {
+        	var col = (x / this.mapChipWidth)  |0;
+        	var row = (y / this.mapChipHeight) |0;
+
+        	var result = {
+        		col:       col,
+        		row:       row,
+        		map:       this.mapchip.map[col][row],
+        		collision: this.mapchip.collision[col][row],
+        	};
+        	return result;
+        },
+
+        /**
+         * 上下左右のマップチップのcollisionを取得
+         */
+        getCrossCollision: function(col, row) {
+        	var limitDown  = this.mapchip.map.length-1;
+        	var limitRight = this.mapchip.map[0].length-1;
+
+        	var up    = (row > 0)          ? this.mapchip.collision[row-1][col] : null;
+        	var down  = (row < limitDown)  ? this.mapchip.collision[row+1][col] : null;
+        	var left  = (col > 0)          ? this.mapchip.collision[row][col-1] : null;
+        	var right = (col < limitRight) ? this.mapchip.collision[row][col+1] : null;
+
+        	var result = {
+        		up:    up,
+        		down:  down,
+        		left:  left,
+        		right: right,
+        	};
+
+        	return result;
+        },
+
+        /**
+         * マップチップのrectを取得
+         */
+        getRect: function(col, row) {
+        	var up    = row     * this.mapChipHeight;
+        	var down  = (row+1) * this.mapChipHeight-1;
+        	var left  = col     * this.mapChipWidth;
+        	var right = (col+1) * this.mapChipWidth -1;
+
+        	var result = {
+        		up: up,
+        		down: down,
+        		left: left,
+        		right: right
+        	};
+
+        	return result;
         }
     });
 

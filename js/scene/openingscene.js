@@ -34,8 +34,7 @@
             pad.position.set(80, ns.SCREEN_HEIGHT - 80);
 
             // マップ
-            this.map = ns.Map(pad);
-            this.map.position.set(ns.SCREEN_WIDTH/2, ns.SCREEN_HEIGHT/2);
+            this.map = ns.Map(pad, {x:ns.SCREEN_WIDTH/2, y:ns.SCREEN_HEIGHT/2});
             this.addChild(this.map);
             this.addChild(pad);
 
