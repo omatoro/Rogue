@@ -17,7 +17,7 @@
 	ns.Map = tm.createClass({
 		superClass : ns.MapSprite,
 
-		init: function (pad, initPosition) {
+		init: function (pad) {
 			// マップの自動生成
 			var map = ns.GenerateMap();
 
@@ -34,6 +34,9 @@
 
             this.superInit(mapchip, 64, 64);
 
+            // 歩ける場所の数
+            this.walkMapNum = map.walkMapNum;
+
             // キャラではなくマップが移動する 加速度
             this.velocity = tm.geom.Vector2(0, 0);
 
@@ -42,21 +45,51 @@
 
             // 移動スピード
             this.speed = 0;
-
-            // プレイヤーの位置を別として保持
-            this.playerPosition = tm.geom.Vector2(
-            	this.width/2  + (ns.SCREEN_WIDTH/2  - initPosition.x),
-            	this.height/2 + (ns.SCREEN_HEIGHT/2 - initPosition.y) + PLAYER_POSITION_Y);
-            this.playerVelocity = tm.geom.Vector2(0, 0);
-
-            // ポジションのセット
-            this.position.set(initPosition.x, initPosition.y);
 		},
 
 		update: function (app) {
 			// マップ移動
 			this._move(app);
 		},
+
+        initMapPosition: function (initPosition) {
+            // プレイヤーの位置を別として保持
+            this.playerPosition = tm.geom.Vector2(
+                this.width/2  + (ns.SCREEN_WIDTH/2  - initPosition.x),
+                this.height/2 + (ns.SCREEN_HEIGHT/2 - initPosition.y) + PLAYER_POSITION_Y);
+            this.playerVelocity = tm.geom.Vector2(0, 0);
+
+            // ポジションのセット
+            this.position.set(initPosition.x, initPosition.y);
+        },
+
+        /**
+         * 歩ける場所からランダムに選んで返す(マップの左上を0,0)
+         */
+        getRandomSafeMapChipPosition: function () {
+            var mapPosition = Math.rand(0, this.walkMapNum-1);
+            var counter = 0;
+
+            for (var i = 0; i < this.mapchip.collision.length; ++i) {
+                for (var j = 0; j < this.mapchip.collision[i].length; ++j) {
+                    // 歩ける場所かどうか
+                    if (this.mapchip.collision[i][j] === 1) {
+                        // ランダムに選んだ場所かどうか
+                        if (counter === mapPosition) {
+                            // ここだ！ マップの左上を0,0とした座標で数値を返す
+                            var result = {
+                                x: j * this.mapChipWidth  + this.mapChipWidth/2,
+                                y: i * this.mapChipHeight
+                            };
+                            return result;
+                        }
+                        else {
+                            ++counter;
+                        }
+                    }
+                }
+            }
+        },
 
 		_move: function (app) {
 			// 移動方向の取得

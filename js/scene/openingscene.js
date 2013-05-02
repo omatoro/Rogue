@@ -8,13 +8,33 @@
         LABELS: {
             children: [{
                 type: "Label",
-                name: "setting_backnum",
+                name: "statusLevel",
                 x: 40,
                 y: 80,
                 width: ns.SCREEN_WIDTH,
                 fillStyle: "white",
-                text: "バック数",
-                fontSize: 30,
+                text: " ",
+                fontSize: 35,
+                align: "left"
+            },{
+                type: "Label",
+                name: "statusHP",
+                x: 160,
+                y: 80,
+                width: ns.SCREEN_WIDTH,
+                fillStyle: "white",
+                text: " ",
+                fontSize: 35,
+                align: "left"
+            },{
+                type: "Label",
+                name: "statusMP",
+                x: 380,
+                y: 80,
+                width: ns.SCREEN_WIDTH,
+                fillStyle: "white",
+                text: " ",
+                fontSize: 35,
                 align: "left"
             }]
         }
@@ -26,15 +46,18 @@
         init : function(backnum, speed, speedName, questnum) {
             this.superInit();
 
-            // ラベル表示
-            //this.fromJSON(UI_DATA.LABELS);
-
             // コントローラーパッド
             var pad = tm.controller.Pad();
             pad.position.set(80, ns.SCREEN_HEIGHT - 80);
 
             // マップ
-            this.map = ns.Map(pad, {x:ns.SCREEN_WIDTH/2, y:ns.SCREEN_HEIGHT/2});
+            this.map = ns.Map(pad);
+            var safePosition = this.map.getRandomSafeMapChipPosition(); // マップの左上を0,0とする
+            // マップの中心を0,0とするように変更
+            var position = {x:0, y:0};
+            position.x = this.map.width/2  + ns.SCREEN_WIDTH/2  - safePosition.x;
+            position.y = this.map.height/2 + ns.SCREEN_HEIGHT/2 - safePosition.y;
+            this.map.initMapPosition(position);
             this.addChild(this.map);
             this.addChild(pad);
 
@@ -57,17 +80,33 @@
             this.slash = tm.app.AnimationSprite(120, 120, ss);
             this.slash.position.set(ns.SCREEN_WIDTH/2 + 10, ns.SCREEN_HEIGHT/2 + 10);
             this.addChild(this.slash);
+
+            // ステータス表示
+            this.fromJSON(UI_DATA.LABELS);
+            this.statusLevel.text = "Lv." + this.player.getLevel();
+            this.statusHP.text    = "HP " + this.player.getCurrentHP() + "/" + this.player.getMaxHP();
+            this.statusMP.text    = "MP " + this.player.getCurrentMP() + "/" + this.player.getMaxMP();
         },
 
         update : function(app) {
             if (app.pointing.getPointingEnd()) {
                 this.slash.gotoAndPlay("slash");
 
+                // ダメージ数を計算
+                var attack = Math.rand(1, 100);
+                var damage = this.player.damage(attack);
+
                 // ダメージ数を表示
-                var damaged = ns.DamagedNumber(Math.rand(1, 9999));
-                damaged.effectPositionSet(ns.SCREEN_WIDTH/2 + 10, ns.SCREEN_HEIGHT/2 + 10);
-                this.addChild(damaged);
+                var damageEffect = ns.DamagedNumber(damage);
+                damageEffect.effectPositionSet(ns.SCREEN_WIDTH/2 + 10, ns.SCREEN_HEIGHT/2 + 10);
+                this.addChild(damageEffect);
+
+
             }
+
+            this.statusLevel.text = "Lv." + this.player.getLevel();
+            this.statusHP.text    = "HP " + this.player.getCurrentHP() + "/" + this.player.getMaxHP();
+            this.statusMP.text    = "MP " + this.player.getCurrentMP() + "/" + this.player.getMaxMP();
         }
     });
 

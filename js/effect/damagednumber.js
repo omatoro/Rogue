@@ -13,7 +13,7 @@
 
 	    init: function(text) {
 	    	// 文字を先に作成(幅を取得するため)
-	    	var label = tm.app.Label(text || "demo", FONT_SIZE);
+	    	var label = tm.app.Label(text + "", FONT_SIZE);
             label.fillStyle = FONT_STYLE;
             label.setAlign("center").setBaseline("middle");
             this.label = label;

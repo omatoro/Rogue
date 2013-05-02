@@ -101,8 +101,9 @@
                 line = "";
             }
 
-            // マップ情報をfalseなら1, trueなら2に変更
-            // コリジョン用のデータをサクッと作る
+            // マップ情報をfalseなら1, trueなら2に変更 ついでに歩ける場所の数も数えとく
+            var possibleWalkMapNum = 0;
+            // またまたついでにコリジョン用のデータをサクッと作る(歩ける:1, 壁:0)
             var collision = [];
             for (var i = 0; i < this.map.length; ++i) {
                 collision[i] = [];
@@ -110,6 +111,7 @@
                     if (map[i][j]) {
                         map[i][j] = 2;
                         collision[i].push(1);
+                        ++possibleWalkMapNum;
                     }
                     else {
                         map[i][j] = 1;
@@ -119,6 +121,7 @@
             }
 
             this.collision = collision;
+            this.walkMapNum = possibleWalkMapNum; // 歩ける場所の数
             console.dir(collision);
         },
 
