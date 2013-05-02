@@ -1,19 +1,16 @@
 /**
- * Player
+ * Enemy
  */
 (function(ns) {
 
-
-
-	ns.Player = tm.createClass({
+	ns.Enemy = tm.createClass({
 		superClass : ns.AnimationCharactor,
 
-		init: function (pad) {
-			this.superInit("player", pad);
+		init: function () {
+			this.superInit("enemy1");
 			// プレイヤーなので操作を受け付けるように設定
-			this.isInput = true;
-
-			// ダメージ= [[[最終ATK * スキル倍率 ] * (4000 + 除算Def) / (4000 + 除算DEF * 10)] * 種族耐性] - 減算DEF
+			this.isInput = false;
+			this.isAuto  = true;
 
 			this.level = 1;
 

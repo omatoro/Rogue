@@ -53,10 +53,10 @@
             // マップ
             this.map = ns.Map(pad);
             var safePosition = this.map.getRandomSafeMapChipPosition(); // マップの左上を0,0とする
-            // マップの中心を0,0とするように変更
+            // マップの中心を0,0とするように変更(マップの座標に変換)
             var position = {x:0, y:0};
-            position.x = this.map.width/2  + ns.SCREEN_WIDTH/2  - safePosition.x;
-            position.y = this.map.height/2 + ns.SCREEN_HEIGHT/2 - safePosition.y;
+            position.x = this.map.width/2  + ns.SCREEN_WIDTH/2  - (safePosition.x * this.map.mapChipWidth  + this.map.mapChipWidth/2);
+            position.y = this.map.height/2 + ns.SCREEN_HEIGHT/2 - (safePosition.y * this.map.mapChipHeight);
             this.map.initMapPosition(position);
             this.addChild(this.map);
             this.addChild(pad);
@@ -66,6 +66,22 @@
             this.player.position.set(ns.SCREEN_WIDTH/2, ns.SCREEN_HEIGHT/2);
             this.addChild(this.player);
 
+            // 敵
+            this.enemyGroup = tm.app.CanvasElement(); //　敵追加は this.enemyGroup.addChild()で
+            this.addChild(this.enemyGroup);
+            var ENEMY_NUM = 1; // 敵の出現数
+            for (var i = 0; i < ENEMY_NUM; ++i) {
+                var enemy = ns.Enemy();
+                // Sceneの座標に変換
+                var safeEnemyPosition = this.map.getRandomSafeMapChipPosition();
+                var enemyPosition = {x:0, y:0};
+                enemyPosition.x = - this.map.width/2   + (safePosition.x * this.map.mapChipWidth  + this.map.mapChipWidth/2);
+                enemyPosition.y = - this.map.height/2  + (safePosition.y * this.map.mapChipHeight);
+                enemy.position.set(enemyPosition.x, enemyPosition.y);
+                this.enemyGroup.addChild(enemy);
+            }
+
+            // 攻撃時のエフェクト
             var ss = tm.app.SpriteSheet({
                 image: "slash",
                 frame: {
@@ -100,8 +116,6 @@
                 var damageEffect = ns.DamagedNumber(damage);
                 damageEffect.effectPositionSet(ns.SCREEN_WIDTH/2 + 10, ns.SCREEN_HEIGHT/2 + 10);
                 this.addChild(damageEffect);
-
-
             }
 
             this.statusLevel.text = "Lv." + this.player.getLevel();

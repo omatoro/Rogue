@@ -7,6 +7,8 @@ tm.preload(function() {
 
 	tm.graphics.TextureManager.add("player", "rsc/player.png");
 
+	tm.graphics.TextureManager.add("enemy1", "rsc/[Monster]Dragon_Black_Uroboros.png");
+
 	tm.graphics.TextureManager.add("slash", "rsc/boldslash.png");
 
 

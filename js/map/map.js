@@ -37,6 +37,9 @@
             // 歩ける場所の数
             this.walkMapNum = map.walkMapNum;
 
+            // 歩ける場所に何かを生成したら覚えておく
+            this.isCreateSomething = [];
+
             // キャラではなくマップが移動する 加速度
             this.velocity = tm.geom.Vector2(0, 0);
 
@@ -59,6 +62,9 @@
                 this.height/2 + (ns.SCREEN_HEIGHT/2 - initPosition.y) + PLAYER_POSITION_Y);
             this.playerVelocity = tm.geom.Vector2(0, 0);
 
+            // セットしたポジションの初期位置を保持
+            this.initPosition = tm.geom.Vector2(initPosition.x, initPosition.y);
+
             // ポジションのセット
             this.position.set(initPosition.x, initPosition.y);
         },
@@ -67,9 +73,27 @@
          * 歩ける場所からランダムに選んで返す(マップの左上を0,0)
          */
         getRandomSafeMapChipPosition: function () {
+            // 既に何かを生成していないか調べる
             var mapPosition = Math.rand(0, this.walkMapNum-1);
-            var counter = 0;
+            var isBreak = true;
+            while (true) {
+                for (var i = 0; i < this.isCreateSomething.length; ++i) {
+                    if (this.isCreateSomething[i] === mapPosition) {
+                        mapPosition = Math.rand(0, this.walkMapNum-1);
+                        isBreak = false;
+                        break;
+                    }
+                    else {
+                        isBreak = true;
+                    }
+                }
+                if (isBreak && this.isCreateSomething[i] !== mapPosition) {
+                    break;
+                }
+            }
 
+            // 歩ける場所を返す
+            var counter = 0;
             for (var i = 0; i < this.mapchip.collision.length; ++i) {
                 for (var j = 0; j < this.mapchip.collision[i].length; ++j) {
                     // 歩ける場所かどうか
@@ -78,9 +102,10 @@
                         if (counter === mapPosition) {
                             // ここだ！ マップの左上を0,0とした座標で数値を返す
                             var result = {
-                                x: j * this.mapChipWidth  + this.mapChipWidth/2,
-                                y: i * this.mapChipHeight
+                                x: j,
+                                y: i
                             };
+                            this.isCreateSomething.push(counter);
                             return result;
                         }
                         else {
@@ -89,6 +114,10 @@
                     }
                 }
             }
+        },
+
+        sceneToMap: function (x, y) {
+            ;
         },
 
 		_move: function (app) {

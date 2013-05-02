@@ -92,6 +92,12 @@
             // アニメーションさせる場合に指定
             this.isAnimation = true;
 
+            // 操作を受け付けるか指定
+            this.isInput = false;
+
+            // ランダム移動を受け付けるか指定
+            this.isAuto = false;
+
             // padがあれば追加する
             this.pad = pad || false;
         },
@@ -111,24 +117,43 @@
         },
 
         update: function (app) {
-            var angle = app.keyboard.getKeyAngle();
-            if (angle !== null && this.isAnimation) {
-                this.velocity.setDegree(angle, 1);
-                this.velocity.y *= -1;
-                this.speed = 4;
-                this.directWatch(angle);
+            // 入力受付
+            if (this.isInput) {
+                var angle = app.keyboard.getKeyAngle();
+                if (angle !== null && this.isAnimation) {
+                    this.velocity.setDegree(angle, 1);
+                    this.velocity.y *= -1;
+                    this.speed = 30;
+                    this.directWatch(angle);
+                }
+                // タッチパネルによる速度設定
+                else if (this.pad && this.pad.isTouching) {
+                    if   (this.pad.angle < 0) {this.pad.angle *= -1;}
+                    else                      {this.pad.angle = 360 - this.pad.angle;}
+                    this.velocity.setDegree(this.pad.angle, 1);
+                    this.velocity.y *= -1;
+                    this.speed = 30;
+                    this.directWatch(this.pad.angle);
+                }
+                else {
+                    this.paused = true;
+                }
+                // console.log("x : " + this.x + " y : " + this.y);
             }
-            // タッチパネルによる速度設定
-            else if (this.pad && this.pad.isTouching) {
-                if   (this.pad.angle < 0) {this.pad.angle *= -1;}
-                else                      {this.pad.angle = 360 - this.pad.angle;}
-                this.velocity.setDegree(this.pad.angle, 1);
-                this.velocity.y *= -1;
-                this.speed = 4;
-                this.directWatch(this.pad.angle);
-            }
-            else {
-                this.paused = true;
+
+            // ランダム移動
+            if (this.isAuto) {
+                // var angle = Math.rand(0, 359);
+                // if (angle !== null && this.isAnimation) {
+                //     this.velocity.setDegree(angle, 1);
+                //     this.velocity.y *= -1;
+                //     this.speed = 4;
+                //     this.directWatch(angle);
+                // }
+                // else {
+                //     this.paused = true;
+                // }
+                // console.log("x : " + this.x + " y : " + this.y);
             }
         },
 
