@@ -32,8 +32,6 @@
                 collision: map.collision
             });
 
-            console.dir(mapchip);
-
             this.superInit(mapchip, 64, 64);
 
             // キャラではなくマップが移動する 加速度
@@ -83,7 +81,6 @@
             // マップヒット判定
 			// 所属しているマップチップを取得
 			var chip = this.getBelong(this.playerPosition.x, this.playerPosition.y);
-			console.log("col(x): " + chip.col + " row(y): " + chip.row);
 			// 所属しているマップチップのrectを取得
 			var chipRect = this.getRect(chip.col, chip.row);
 			// 上下左右のマップチップのcollisionを取得

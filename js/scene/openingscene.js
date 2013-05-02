@@ -42,9 +42,27 @@
             this.player = ns.Player(pad);
             this.player.position.set(ns.SCREEN_WIDTH/2, ns.SCREEN_HEIGHT/2);
             this.addChild(this.player);
+
+            var ss = tm.app.SpriteSheet({
+                image: "slash",
+                frame: {
+                    width: 65,
+                    height: 65,
+                    count: 8
+                },
+                animations: {
+                    "slash": [0, 8]
+                }
+            });
+            this.slash = tm.app.AnimationSprite(120, 120, ss);
+            this.slash.position.set(ns.SCREEN_WIDTH/2 + 10, ns.SCREEN_HEIGHT/2 + 10);
+            this.addChild(this.slash);
         },
 
-        update : function() {
+        update : function(app) {
+            if (app.pointing.getPointingEnd()) {
+                this.slash.gotoAndPlay("slash");
+            }
         }
     });
 

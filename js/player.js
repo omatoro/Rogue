@@ -9,7 +9,6 @@
 		init: function (pad) {
 			this.superInit("player", pad);
 		}
-
 	});
 
 })(game);
