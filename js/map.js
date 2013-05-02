@@ -11,6 +11,9 @@
     var CHIP_WIDTH     = IMAGE_WIDTH;
     var CHIP_HEIGHT    = IMAGE_HEIGHT/IMAGE_DIVIDE_ROW;
 
+    // PLAYERの位置を微調整(マップのヒット判定を綺麗に行うため)
+    var PLAYER_POSITION_Y = 48;
+
 	ns.Map = tm.createClass({
 		superClass : ns.MapSprite,
 
@@ -29,6 +32,8 @@
                 collision: map.collision
             });
 
+            console.dir(mapchip);
+
             this.superInit(mapchip, 64, 64);
 
             // キャラではなくマップが移動する 加速度
@@ -43,7 +48,7 @@
             // プレイヤーの位置を別として保持
             this.playerPosition = tm.geom.Vector2(
             	this.width/2  + (ns.SCREEN_WIDTH/2  - initPosition.x),
-            	this.height/2 + (ns.SCREEN_HEIGHT/2 - initPosition.y) + 32);
+            	this.height/2 + (ns.SCREEN_HEIGHT/2 - initPosition.y) + PLAYER_POSITION_Y);
             this.playerVelocity = tm.geom.Vector2(0, 0);
 
             // ポジションのセット
@@ -78,6 +83,7 @@
             // マップヒット判定
 			// 所属しているマップチップを取得
 			var chip = this.getBelong(this.playerPosition.x, this.playerPosition.y);
+			console.log("col(x): " + chip.col + " row(y): " + chip.row);
 			// 所属しているマップチップのrectを取得
 			var chipRect = this.getRect(chip.col, chip.row);
 			// 上下左右のマップチップのcollisionを取得
@@ -92,7 +98,7 @@
             	var movedY = this.playerPosition.y + movingAmount.y;
             	if (movedY < chipRect.up)   { this.playerVelocity.y = 0; } // とりあえず移動させない(マップぴったりに合わせたほうがいいかも)
             }
-            else if (crossCollision.down === null || crossCollision.down === 0) {
+            if (crossCollision.down === null || crossCollision.down === 0) {
             	var movedY = this.playerPosition.y + movingAmount.y;
             	if (movedY > chipRect.down) { this.playerVelocity.y = 0; }
             }
@@ -100,7 +106,7 @@
             	var movedX = this.playerPosition.x + movingAmount.x;
             	if (movedX < chipRect.left) { this.playerVelocity.x = 0; }
             }
-            else if (crossCollision.right === null || crossCollision.right === 0) {
+            if (crossCollision.right === null || crossCollision.right === 0) {
             	var movedX = this.playerPosition.x + movingAmount.x;
             	if (movedX > chipRect.right) { this.playerVelocity.x = 0; }
             }

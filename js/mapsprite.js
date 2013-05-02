@@ -65,8 +65,8 @@
         	var result = {
         		col:       col,
         		row:       row,
-        		map:       this.mapchip.map[col][row],
-        		collision: this.mapchip.collision[col][row],
+        		map:       this.mapchip.map[row][col],
+        		collision: this.mapchip.collision[row][col],
         	};
         	return result;
         },
