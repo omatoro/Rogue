@@ -56,8 +56,6 @@
 		update: function (app) {
 			// マップ移動
 			this._move(app);
-
-
 		},
 
 		_move: function (app) {

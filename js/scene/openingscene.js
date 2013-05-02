@@ -62,6 +62,11 @@
         update : function(app) {
             if (app.pointing.getPointingEnd()) {
                 this.slash.gotoAndPlay("slash");
+
+                // ダメージ数を表示
+                var damaged = ns.DamagedNumber(Math.rand(1, 9999));
+                damaged.effectPositionSet(ns.SCREEN_WIDTH/2 + 10, ns.SCREEN_HEIGHT/2 + 10);
+                this.addChild(damaged);
             }
         }
     });
