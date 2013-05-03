@@ -3,14 +3,13 @@
  */
 (function(ns) {
 
-
-
 	ns.Player = tm.createClass({
 		superClass : ns.AnimationCharactor,
 
 		init: function (pad) {
-			this.superInit("player", pad);
+			this.superInit("player");
 			// プレイヤーなので操作を受け付けるように設定
+			this.setInputPad(pad);
 			this.isInput = true;
 
 			// ダメージ= [[[最終ATK * スキル倍率 ] * (4000 + 除算Def) / (4000 + 除算DEF * 10)] * 種族耐性] - 減算DEF
@@ -53,6 +52,10 @@
 
 			return damage;
 		},
+
+		update: function (app) {
+			this.inputAnimation(app);
+		}
 	});
 
 })(game);

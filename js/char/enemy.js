@@ -7,7 +7,11 @@
 		superClass : ns.AnimationCharactor,
 
 		init: function () {
-			this.superInit("enemy1");
+			this.superInit("enemy1", {
+				width:  180/6,
+				height: 112/4,
+				count:  24,
+			}, 3);
 			// プレイヤーなので操作を受け付けるように設定
 			this.isInput = false;
 			this.isAuto  = true;
@@ -50,6 +54,10 @@
 
 			return damage;
 		},
+
+		update: function () {
+			this.directAnimation();
+		}
 	});
 
 })(game);

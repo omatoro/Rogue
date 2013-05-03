@@ -50,36 +50,39 @@
             var pad = tm.controller.Pad();
             pad.position.set(80, ns.SCREEN_HEIGHT - 80);
 
-            // マップ
-            this.map = ns.Map(pad);
-            var safePosition = this.map.getRandomSafeMapChipPosition(); // マップの左上を0,0とする
-            // マップの中心を0,0とするように変更(マップの座標に変換)
-            var position = {x:0, y:0};
-            position.x = this.map.width/2  + ns.SCREEN_WIDTH/2  - (safePosition.x * this.map.mapChipWidth  + this.map.mapChipWidth/2);
-            position.y = this.map.height/2 + ns.SCREEN_HEIGHT/2 - (safePosition.y * this.map.mapChipHeight);
-            this.map.initMapPosition(position);
-            this.addChild(this.map);
-            this.addChild(pad);
-
             // プレイヤー
             this.player = ns.Player(pad);
             this.player.position.set(ns.SCREEN_WIDTH/2, ns.SCREEN_HEIGHT/2);
-            this.addChild(this.player);
+
+            // マップ
+            this.map = ns.Map(pad);
+            // 取得した位置をスクリーンの中心になるようにマップの中心座標を設定する
+            var safePosition = this.map.getRandomSafeMapChipPosition(); // 場所を取得
+            safePosition = this.map.mapLeftTopToMapCenter(
+                safePosition.x * this.map.mapChipWidth  + this.map.mapChipWidth/2,
+                safePosition.y * this.map.mapChipHeight);
+            // マップの中心位置を計算する(safePositionがスクリーンの中心に来るように)
+            safePosition.x = ns.SCREEN_WIDTH/2  - safePosition.x;
+            safePosition.y = ns.SCREEN_HEIGHT/2 - safePosition.y;
+            this.map.initMapPosition(safePosition);
+            this.map.setPlayer(safePosition);
 
             // 敵
-            this.enemyGroup = tm.app.CanvasElement(); //　敵追加は this.enemyGroup.addChild()で
-            this.addChild(this.enemyGroup);
-            var ENEMY_NUM = 1; // 敵の出現数
+            this.enemyGroup = tm.app.CanvasElement();
+            var ENEMY_NUM = 80; // 敵の出現数
             for (var i = 0; i < ENEMY_NUM; ++i) {
                 var enemy = ns.Enemy();
                 // Sceneの座標に変換
                 var safeEnemyPosition = this.map.getRandomSafeMapChipPosition();
-                var enemyPosition = {x:0, y:0};
-                enemyPosition.x = - this.map.width/2   + (safePosition.x * this.map.mapChipWidth  + this.map.mapChipWidth/2);
-                enemyPosition.y = - this.map.height/2  + (safePosition.y * this.map.mapChipHeight);
-                enemy.position.set(enemyPosition.x, enemyPosition.y);
+                safeEnemyPosition = this.map.mapLeftTopToMapCenter(
+                    safeEnemyPosition.x * this.map.mapChipWidth  + this.map.mapChipWidth/2,
+                    safeEnemyPosition.y * this.map.mapChipHeight);
+
+                enemy.position.set(safeEnemyPosition.x, safeEnemyPosition.y);
                 this.enemyGroup.addChild(enemy);
             }
+            // 敵をマップに追加
+            this.map.setEnemyGroup(this.enemyGroup);
 
             // 攻撃時のエフェクト
             var ss = tm.app.SpriteSheet({
@@ -95,6 +98,11 @@
             });
             this.slash = tm.app.AnimationSprite(120, 120, ss);
             this.slash.position.set(ns.SCREEN_WIDTH/2 + 10, ns.SCREEN_HEIGHT/2 + 10);
+
+            // 画面に追加
+            this.addChild(this.map);
+            this.addChild(pad);
+            this.addChild(this.player);
             this.addChild(this.slash);
 
             // ステータス表示
@@ -102,6 +110,15 @@
             this.statusLevel.text = "Lv." + this.player.getLevel();
             this.statusHP.text    = "HP " + this.player.getCurrentHP() + "/" + this.player.getMaxHP();
             this.statusMP.text    = "MP " + this.player.getCurrentMP() + "/" + this.player.getMaxMP();
+        },
+
+        screenLeftTopToCenter: function (x, y) {
+            var result = tm.geom.Vector2(x - ns.SCREEN_WIDTH/2, y - ns.SCREEN_HEIGHT/2);
+            return result;
+        },
+        screenCenterToLeftTop: function (x, y) {
+            var result = tm.geom.Vector2(x + ns.SCREEN_WIDTH/2, y + ns.SCREEN_HEIGHT/2);
+            return result;
         },
 
         update : function(app) {

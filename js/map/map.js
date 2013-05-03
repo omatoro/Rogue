@@ -14,6 +14,12 @@
     // PLAYERの位置を微調整(マップのヒット判定を綺麗に行うため)
     var PLAYER_POSITION_Y = 48;
 
+    // どこに衝突しているか
+    var HIT_UP    = 0x01;
+    var HIT_DOWN  = 0x02;
+    var HIT_LEFT  = 0x04;
+    var HIT_RIGHT = 0x08;
+
 	ns.Map = tm.createClass({
 		superClass : ns.MapSprite,
 
@@ -48,6 +54,12 @@
 
             // 移動スピード
             this.speed = 0;
+
+            // マップ上に敵を設置する場合
+            this.isEnemy = false;
+
+            // スクリーン中心にプレイヤーを設置するか
+            this.isPlayer = false;
 		},
 
 		update: function (app) {
@@ -55,13 +67,44 @@
 			this._move(app);
 		},
 
-        initMapPosition: function (initPosition) {
+        setEnemyGroup: function (enemyGroup) {
+            this.isEnemy = true;
+            this.enemyGroup = enemyGroup;
+            this.addChild(enemyGroup); // MAPの中心座標が0,0となる
+        },
+
+        setPlayer: function (initPosition) {
             // プレイヤーの位置を別として保持
+            this.isPlayer = true;
             this.playerPosition = tm.geom.Vector2(
                 this.width/2  + (ns.SCREEN_WIDTH/2  - initPosition.x),
                 this.height/2 + (ns.SCREEN_HEIGHT/2 - initPosition.y) + PLAYER_POSITION_Y);
-            this.playerVelocity = tm.geom.Vector2(0, 0);
+        },
 
+        screenLeftTopToMapCenter: function (x, y) {
+            var result = tm.geom.Vector2(x - this.x, y - this.y);
+            return result;
+        },
+        screenLeftTopToMapLeftTop: function (x, y) {
+            var toMapCenter = this.screenLeftTopToMapCenter(x, y);
+            var result = tm.geom.Vector2(toMapCenter.x + this.width/2, toMapCenter.y + this.height/2);
+            return result;
+        },
+        mapLeftTopToMapCenter: function (x, y) {
+            var result = tm.geom.Vector2(-this.width/2 + x, -this.height/2 + y);
+            return result;
+        },
+        mapCenterToScreenTopLeft: function (x, y) {
+            var result = tm.geom.Vector2(this.x + x, this.y + y);
+            return result;
+        },
+        mapLeftTopToScreenTopLeft: function (x, y) {
+            var mapCenter = this.mapLeftTopToMapCenter(x, y);
+            var screenTopLeft = this.mapCenterToScreenTopLeft(mapCenter.x, mapCenter.y);
+            return screenTopLeft;
+        },
+
+        initMapPosition: function (initPosition) {
             // セットしたポジションの初期位置を保持
             this.initPosition = tm.geom.Vector2(initPosition.x, initPosition.y);
 
@@ -116,10 +159,6 @@
             }
         },
 
-        sceneToMap: function (x, y) {
-            ;
-        },
-
 		_move: function (app) {
 			// 移動方向の取得
             var angle = app.keyboard.getKeyAngle();
@@ -138,46 +177,74 @@
                 this.speed = 6;
             }
 
-            // マップヒット判定
-			// 所属しているマップチップを取得
-			var chip = this.getBelong(this.playerPosition.x, this.playerPosition.y);
-			// 所属しているマップチップのrectを取得
-			var chipRect = this.getRect(chip.col, chip.row);
-			// 上下左右のマップチップのcollisionを取得
-			var crossCollision = this.getCrossCollision(chip.col, chip.row);
-            // 移動量を取得
-            this.playerVelocity = this.velocity.clone();
-            this.playerVelocity.x *= -1;
-            this.playerVelocity.y *= -1;
-            var movingAmount = tm.geom.Vector2.mul(this.playerVelocity, this.speed);
-            // 移動後の位置が衝突しているか
-            if (crossCollision.up === null || crossCollision.up === 0) {
-            	var movedY = this.playerPosition.y + movingAmount.y;
-            	if (movedY < chipRect.up)   { this.playerVelocity.y = 0; } // とりあえず移動させない(マップぴったりに合わせたほうがいいかも)
-            }
-            if (crossCollision.down === null || crossCollision.down === 0) {
-            	var movedY = this.playerPosition.y + movingAmount.y;
-            	if (movedY > chipRect.down) { this.playerVelocity.y = 0; }
-            }
-            if (crossCollision.left === null || crossCollision.left === 0) {
-            	var movedX = this.playerPosition.x + movingAmount.x;
-            	if (movedX < chipRect.left) { this.playerVelocity.x = 0; }
-            }
-            if (crossCollision.right === null || crossCollision.right === 0) {
-            	var movedX = this.playerPosition.x + movingAmount.x;
-            	if (movedX > chipRect.right) { this.playerVelocity.x = 0; }
+            // プレイヤーの移動
+            if (this.isPlayer) {
+                this.velocity = this._playerMove();
             }
 
-            // プレイやーの位置を更新
-            this.playerPosition.add(tm.geom.Vector2.mul(this.playerVelocity, this.speed));
-            // マップ位置を更新
-            this.playerVelocity.x *= -1;
-            this.playerVelocity.y *= -1;
-            this.velocity = this.playerVelocity.clone();
+            // 敵の移動
+            if (this.isEnemy) {
+                //this._enemyMove();
+            }
+            
             this.position.add(tm.geom.Vector2.mul(this.velocity, this.speed));
 
             this.speed = 0;
 		},
+
+        _playerMove: function () {
+            var playerVelocity = this.velocity.clone();
+            playerVelocity.x *= -1;
+            playerVelocity.y *= -1;
+            var isHit = this._isHitCollisionMap(
+                this.playerPosition.x,
+                this.playerPosition.y,
+                playerVelocity,
+                this.speed);
+            if (isHit & HIT_UP)    { playerVelocity.y = 0; }
+            if (isHit & HIT_DOWN)  { playerVelocity.y = 0; }
+            if (isHit & HIT_LEFT)  { playerVelocity.x = 0; }
+            if (isHit & HIT_RIGHT) { playerVelocity.x = 0; }
+
+            // プレイやーの位置を更新
+            this.playerPosition.add(tm.geom.Vector2.mul(playerVelocity, this.speed));
+
+            // プレイヤーがいたらマップチップとのヒット判定を行うので、マップ移動用に移動量を返す
+            playerVelocity.x *= -1;
+            playerVelocity.y *= -1;
+            return playerVelocity.clone();
+        },
+
+        _isHitCollisionMap: function (x, y, velocity, speed) {
+            // 返す値
+            var result = 0x00;
+            // 所属しているマップチップを取得
+            var chip = this.getBelong(x, y);
+            // 所属しているマップチップのrectを取得
+            var chipRect = this.getRect(chip.col, chip.row);
+            // 上下左右のマップチップのcollisionを取得
+            var crossCollision = this.getCrossCollision(chip.col, chip.row);
+            // 移動量を取得
+            var movingAmount = tm.geom.Vector2.mul(velocity, speed);
+            // 移動後の位置が衝突しているか
+            if (crossCollision.up === null || crossCollision.up === 0) {
+                var movedY = y + movingAmount.y;
+                if (movedY < chipRect.up)   { result |= HIT_UP; } // とりあえず移動させない(マップぴったりに合わせたほうがいいかも)
+            }
+            if (crossCollision.down === null || crossCollision.down === 0) {
+                var movedY = y + movingAmount.y;
+                if (movedY > chipRect.down) { result |= HIT_DOWN; }
+            }
+            if (crossCollision.left === null || crossCollision.left === 0) {
+                var movedX = x + movingAmount.x;
+                if (movedX < chipRect.left) { result |= HIT_LEFT; }
+            }
+            if (crossCollision.right === null || crossCollision.right === 0) {
+                var movedX = x + movingAmount.x;
+                if (movedX > chipRect.right) { result |= HIT_RIGHT; }
+            }
+            return result;
+        },
 
 	});
 

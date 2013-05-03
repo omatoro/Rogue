@@ -3,9 +3,9 @@
  */
 (function(ns) {
 
-    var DOWN_NEUTRAL = 1;
-    var UP_NEUTRAL   = 19;
-    var LEFT_NEUTRAL = 7;
+    var DOWN_NEUTRAL  = 1;
+    var UP_NEUTRAL    = 19;
+    var LEFT_NEUTRAL  = 7;
     var RIGHT_NEUTRAL = 13;
 
     var UPLEFT_NEUTRAL    = 16;
@@ -32,15 +32,21 @@
     ns.AnimationCharactor = tm.createClass({
         superClass : tm.app.AnimationSprite,
 
-        init: function (imageName, pad) {
+        init: function (imageName, frame, drawImageScaleSize) {
+
+            frame = frame || {
+                width:  IMAGE_WIDTH/IMAGE_DIVIDE_COLUMN,
+                height: IMAGE_HEIGHT/IMAGE_DIVIDE_ROW,
+                count:  IMAGE_ANIM_COUNT
+            };
+
+            drawImageScaleSize = drawImageScaleSize || 4;
+
+            console.dir(frame);
 
             var ss = tm.app.SpriteSheet({
                 image: imageName,
-                frame: {
-                    width: IMAGE_WIDTH/IMAGE_DIVIDE_COLUMN,
-                    height: IMAGE_HEIGHT/IMAGE_DIVIDE_ROW,
-                    count: IMAGE_ANIM_COUNT
-                },
+                frame: frame,
                 animations: {
                     "onlydown":   [DOWN_NEUTRAL,   DOWN_NEUTRAL+1, "_onlydown1", 5],
                     "_onlydown1": [DOWN_NEUTRAL+1, DOWN_NEUTRAL+2, "_onlydown2", 5],
@@ -84,7 +90,7 @@
                 }
             });
 
-            this.superInit(IMAGE_WIDTH/IMAGE_DIVIDE_COLUMN*4, IMAGE_HEIGHT/IMAGE_DIVIDE_ROW*4, ss);
+            this.superInit(frame.width*drawImageScaleSize, frame.height*drawImageScaleSize, ss);
 
             // 向いている方向を保持
             this.velocity = tm.geom.Vector2(0, 0);
@@ -99,6 +105,11 @@
             this.isAuto = false;
 
             // padがあれば追加する
+            this.pad = false;
+        },
+
+        // 入力でパッドも使うならセットする
+        setInputPad: function (pad) {
             this.pad = pad || false;
         },
 
@@ -116,7 +127,8 @@
             }
         },
 
-        update: function (app) {
+        // 入力を受け付けてアニメーションする
+        inputAnimation: function (app) {
             // 入力受付
             if (this.isInput) {
                 var angle = app.keyboard.getKeyAngle();
@@ -140,22 +152,26 @@
                 }
                 // console.log("x : " + this.x + " y : " + this.y);
             }
-
-            // ランダム移動
-            if (this.isAuto) {
-                // var angle = Math.rand(0, 359);
-                // if (angle !== null && this.isAnimation) {
-                //     this.velocity.setDegree(angle, 1);
-                //     this.velocity.y *= -1;
-                //     this.speed = 4;
-                //     this.directWatch(angle);
-                // }
-                // else {
-                //     this.paused = true;
-                // }
-                // console.log("x : " + this.x + " y : " + this.y);
-            }
         },
+
+        // 移動方向に合わせて向きを変える
+        directAnimation: function () {
+            // ランダム移動
+            // if (this.isAuto) {
+            //     var angle = Math.rand(0, 359);
+            //     if (angle !== null && this.isAnimation) {
+            //         this.velocity.setDegree(angle, 1);
+            //         this.velocity.y *= -1;
+            //         this.speed = 4;
+            //         this.directWatch(angle);
+            //     }
+            //     else {
+            //         this.paused = true;
+            //     }
+            //     // console.log("x : " + this.x + " y : " + this.y);
+            // }
+        },
+
 
         // 指定方向以外の向きか調べる
         _exceptDirectWatch: function (angle) {
