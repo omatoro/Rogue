@@ -94,6 +94,10 @@
             var result = tm.geom.Vector2(-this.width/2 + x, -this.height/2 + y);
             return result;
         },
+        mapCenterToMapLeftTop: function (x, y) {
+            var result = tm.geom.Vector2(this.width/2 + x, this.height/2 + y);
+            return result;
+        },
         mapCenterToScreenTopLeft: function (x, y) {
             var result = tm.geom.Vector2(this.x + x, this.y + y);
             return result;
@@ -184,13 +188,36 @@
 
             // 敵の移動
             if (this.isEnemy) {
-                //this._enemyMove();
+                this._enemyMove();
             }
             
             this.position.add(tm.geom.Vector2.mul(this.velocity, this.speed));
 
             this.speed = 0;
 		},
+
+        _enemyMove: function () {
+            for (var i = 0; i < this.enemyGroup.children.length; ++i) {
+                var velocity = this.enemyGroup.children[i].velocity.clone();
+                var position = this.enemyGroup.children[i].position.clone();
+                position = this.mapCenterToMapLeftTop(position.x, position.y);
+                var speed    = this.enemyGroup.children[i].speed;
+                velocity.x *= -1;
+                velocity.y *= -1;
+                var isHit = this._isHitCollisionMap(
+                    position.x,
+                    position.y,
+                    velocity,
+                    speed);
+                if (isHit & HIT_UP)    { velocity.y = 0; }
+                if (isHit & HIT_DOWN)  { velocity.y = 0; }
+                if (isHit & HIT_LEFT)  { velocity.x = 0; }
+                if (isHit & HIT_RIGHT) { velocity.x = 0; }
+
+                // 敵の位置を更新
+                this.enemyGroup.children[i].position.add(tm.geom.Vector2.mul(velocity, speed));
+            }
+        },
 
         _playerMove: function () {
             var playerVelocity = this.velocity.clone();

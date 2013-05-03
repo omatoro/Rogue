@@ -56,7 +56,7 @@
         },
 
         /**
-         * どこのマップチップに所属しているか取得
+         * どこのマップチップに所属しているか取得(Map左上が0,0となる座標で指定)
          */
         getBelong: function(x, y) {
         	var col = (x / this.mapChipWidth)  |0;

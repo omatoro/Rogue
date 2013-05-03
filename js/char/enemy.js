@@ -30,6 +30,9 @@
 			this._luk = 40; // 運
 			this._vit = 40; // 体力
 			this._dex = 40; // 器用さ
+
+			this.speed = 4;
+			this.velocity = tm.geom.Vector2(0, 0);
 		},
 
 		getLevel: function () { return this.level; },
@@ -55,8 +58,8 @@
 			return damage;
 		},
 
-		update: function () {
-			this.directAnimation();
+		update: function (app) {
+			this.directAnimation(app);
 		}
 	});
 
