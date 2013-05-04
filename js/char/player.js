@@ -53,6 +53,11 @@
 			return damage;
 		},
 
+		attack: function () {
+			console.log("attack");
+			return this.angle;
+		},
+
 		update: function (app) {
 			this.inputAnimation(app);
 		}

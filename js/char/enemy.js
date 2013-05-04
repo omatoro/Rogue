@@ -58,6 +58,10 @@
 			return damage;
 		},
 
+		isHit: function (point, radius) {
+			console.log(this.radius);
+		},
+
 		update: function (app) {
 			this.directAnimation(app);
 		}

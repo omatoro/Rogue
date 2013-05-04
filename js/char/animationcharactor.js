@@ -104,6 +104,9 @@
 
             // padがあれば追加する
             this.pad = false;
+
+            // 向いている方向を保持
+            this.angle = 270;
         },
 
         // 入力でパッドも使うならセットする
@@ -135,6 +138,7 @@
                     this.velocity.y *= -1;
                     this.speed = 30;
                     this.directWatch(angle);
+                    this.angle = angle;
                 }
                 // タッチパネルによる速度設定
                 else if (this.pad && this.pad.isTouching) {
@@ -144,6 +148,7 @@
                     this.velocity.y *= -1;
                     this.speed = 30;
                     this.directWatch(this.pad.angle);
+                    this.angle = this.pad.angle;
                 }
                 else {
                     this.paused = true;
@@ -162,18 +167,17 @@
                 }
                 if (angle && this.isAnimation) {
                     this.velocity.setDegree(angle, 1);
-                    this.velocity.y *= -1;
+                    this.velocity.x *= -1;
                     this.speed = 4;
                     this.directWatch(angle);
                 }
                 else {
-                    this.paused = true;
+                    //this.paused = true;
                 }
                 // this.position.add(tm.geom.Vector2.mul(this.velocity, this.speed));
                 // console.log("x : " + this.x + " y : " + this.y);
             }
         },
-
 
         // 指定方向以外の向きか調べる
         _exceptDirectWatch: function (angle) {

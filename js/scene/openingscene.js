@@ -51,44 +51,47 @@
             pad.position.set(80, ns.SCREEN_HEIGHT - 80);
 
             // プレイヤー
-            this.player = ns.Player(pad);
-            this.player.position.set(ns.SCREEN_WIDTH/2, ns.SCREEN_HEIGHT/2);
+            var player = ns.Player(pad);
+            this.player = player;
+            player.position.set(ns.SCREEN_WIDTH/2, ns.SCREEN_HEIGHT/2);
 
             // マップ
-            this.map = ns.Map(pad);
+            var map = ns.Map(pad);
+            this.map = map;
             // 取得した位置をスクリーンの中心になるようにマップの中心座標を設定する
-            var safePosition = this.map.getRandomSafeMapChipPosition(); // 場所を取得
-            safePosition = this.map.mapLeftTopToMapCenter(
-                safePosition.x * this.map.mapChipWidth  + this.map.mapChipWidth/2,
-                safePosition.y * this.map.mapChipHeight);
+            var safePosition = map.getRandomSafeMapChipPosition(); // 場所を取得
+            safePosition = map.mapLeftTopToMapCenter(
+                safePosition.x * map.mapChipWidth  + map.mapChipWidth/2,
+                safePosition.y * map.mapChipHeight);
             // マップの中心位置を計算する(safePositionがスクリーンの中心に来るように)
             safePosition.x = ns.SCREEN_WIDTH/2  - safePosition.x;
             safePosition.y = ns.SCREEN_HEIGHT/2 - safePosition.y;
-            this.map.initMapPosition(safePosition);
-            this.map.setPlayer(safePosition);
+            map.initMapPosition(safePosition);
+            map.setPlayer(safePosition);
 
             // 敵
-            this.enemyGroup = tm.app.CanvasElement();
+            var enemyGroup = tm.app.CanvasElement();
+            this.enemyGroup = enemyGroup;
             var ENEMY_NUM = 80; // 敵の出現数
             for (var i = 0; i < ENEMY_NUM; ++i) {
                 var enemy = ns.Enemy();
                 // Sceneの座標に変換
-                var safeEnemyPosition = this.map.getRandomSafeMapChipPosition();
-                safeEnemyPosition = this.map.mapLeftTopToMapCenter(
-                    safeEnemyPosition.x * this.map.mapChipWidth  + this.map.mapChipWidth/2,
-                    safeEnemyPosition.y * this.map.mapChipHeight);
+                var safeEnemyPosition = map.getRandomSafeMapChipPosition();
+                safeEnemyPosition = map.mapLeftTopToMapCenter(
+                    safeEnemyPosition.x * map.mapChipWidth  + map.mapChipWidth/2,
+                    safeEnemyPosition.y * map.mapChipHeight);
 
                 enemy.position.set(safeEnemyPosition.x, safeEnemyPosition.y);
-                this.enemyGroup.addChild(enemy);
+                enemyGroup.addChild(enemy);
             }
             // 敵をマップに追加
-            this.map.setEnemyGroup(this.enemyGroup);
+            map.setEnemyGroup(enemyGroup);
 
             // 攻撃時のエフェクト
             var ss = tm.app.SpriteSheet({
                 image: "slash",
                 frame: {
-                    width: 65,
+                    width:  65,
                     height: 65,
                     count: 8
                 },
@@ -96,20 +99,66 @@
                     "slash": [0, 8]
                 }
             });
-            this.slash = tm.app.AnimationSprite(120, 120, ss);
-            this.slash.position.set(ns.SCREEN_WIDTH/2 + 10, ns.SCREEN_HEIGHT/2 + 10);
+            var slash = tm.app.AnimationSprite(120, 120, ss)
+            // this.slash = slash;
+            slash.position.set(ns.SCREEN_WIDTH/2 + 10, ns.SCREEN_HEIGHT/2 + 10);
+
+            // 攻撃ボタン
+            var attackButton = tm.app.GlossyButton(100, 60, "green", "攻撃");
+            attackButton.position.set(ns.SCREEN_WIDTH-50-50, ns.SCREEN_HEIGHT-30-50);
+            this.attackButton = attackButton;
+            attackButton.addEventListener("pointingend", function(e) {
+                // 攻撃の方向を調べる
+                var attackAngle = player.attack();
+                var attackVelocity = tm.geom.Vector2(0,0).setDegree(attackAngle, 1);
+                attackVelocity.y *= -1;
+                // 攻撃の場所を計算する()画面上
+                var distanse = 100;
+                var attackScreenPosition = player.position.clone().add(tm.geom.Vector2.mul(attackVelocity, distanse));
+
+                // 攻撃時のアニメーション
+                slash.position.set(attackScreenPosition.x, attackScreenPosition.y);
+                slash.gotoAndPlay("slash");
+
+                // 攻撃するポイントを作成
+                var attackMapPosition = map.playerPosition.clone().add(tm.geom.Vector2.mul(attackVelocity, distanse));
+                attackMapPosition = map.mapLeftTopToMapCenter(attackMapPosition.x, attackMapPosition.y-20);
+                var attackElement = tm.app.Object2D();
+                attackElement.radius = 20;
+                attackElement.position.set(attackMapPosition.x, attackMapPosition.y);
+                // attackElement.setSize(10, 10);
+                // console.dir(attackElement.centerX);
+                // console.dir(attackElement.getBoundingCircle());
+                console.dir("centerX " + attackElement.centerX + " centerY " + attackElement.centerY + " radius " + attackElement.radius);
+
+
+                // 攻撃が当たっているか調べる
+                for (var i = 0; i < enemyGroup.children.length; ++i) {
+                    var position = enemyGroup.children[i].position.clone();
+                    if (enemyGroup.children[i].isHitElementCircle(attackElement)) {
+                        // ダメージ数を計算
+                        var attack = Math.rand(1, 100);
+                        var damage = player.damage(attack);
+
+                        // ダメージ数を表示
+                        var damageEffect = ns.DamagedNumber(damage);
+                        damageEffect.effectPositionSet(ns.SCREEN_WIDTH/2 + 10, ns.SCREEN_HEIGHT/2 + 10);
+                        e.app.currentScene.addChild(damageEffect);
+                    }
+                }
+
+
+            });
 
             // 画面に追加
-            this.addChild(this.map);
+            this.addChild(map);
             this.addChild(pad);
-            this.addChild(this.player);
-            this.addChild(this.slash);
+            this.addChild(player);
+            this.addChild(slash);
+            this.addChild(attackButton);
 
             // ステータス表示
             this.fromJSON(UI_DATA.LABELS);
-            this.statusLevel.text = "Lv." + this.player.getLevel();
-            this.statusHP.text    = "HP " + this.player.getCurrentHP() + "/" + this.player.getMaxHP();
-            this.statusMP.text    = "MP " + this.player.getCurrentMP() + "/" + this.player.getMaxMP();
         },
 
         screenLeftTopToCenter: function (x, y) {
@@ -121,23 +170,21 @@
             return result;
         },
 
-        update : function(app) {
-            if (app.pointing.getPointingEnd()) {
-                this.slash.gotoAndPlay("slash");
-
-                // ダメージ数を計算
-                var attack = Math.rand(1, 100);
-                var damage = this.player.damage(attack);
-
-                // ダメージ数を表示
-                var damageEffect = ns.DamagedNumber(damage);
-                damageEffect.effectPositionSet(ns.SCREEN_WIDTH/2 + 10, ns.SCREEN_HEIGHT/2 + 10);
-                this.addChild(damageEffect);
-            }
-
+        drawStatus: function () {
             this.statusLevel.text = "Lv." + this.player.getLevel();
             this.statusHP.text    = "HP " + this.player.getCurrentHP() + "/" + this.player.getMaxHP();
             this.statusMP.text    = "MP " + this.player.getCurrentMP() + "/" + this.player.getMaxMP();
+        },
+
+        update : function(app) {
+
+            // // プレイヤーの攻撃
+            // if () {
+            //     ;
+            // }
+
+            // ステータスの描画
+            this.drawStatus();
         }
     });
 
