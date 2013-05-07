@@ -73,6 +73,11 @@
             this.addChild(enemyGroup); // MAPの中心座標が0,0となる
         },
 
+        setItemGroup: function (itemGroup) {
+            this.itemGroup = itemGroup;
+            this.addChild(itemGroup); // MAPの中心座標が0,0となる
+        },
+
         setPlayer: function (initPosition) {
             // プレイヤーの位置を別として保持
             this.isPlayer = true;

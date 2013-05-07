@@ -5,7 +5,7 @@
 
     ns.MapSprite = tm.createClass({
 
-        superClass: tm.app.CanvasElement,
+        superClass: tm.app.Shape,
 
         /**
          * 初期化
@@ -13,23 +13,24 @@
          */
         init: function(mapchip, mapChipWidth, mapChipHeight)
         {
-            this.superInit();
+            var width  = mapchip.map[0].length * (mapChipWidth  || 16);
+            var height = mapchip.map.length    * (mapChipHeight || 16);
+            this.superInit(width, height);
             
-            this.width  = mapchip.map[0].length * (mapChipWidth  || 16);
-            this.height = mapchip.map.length    * (mapChipHeight || 16);
-
             this.mapChipWidth  = mapChipWidth  || 16;
             this.mapChipHeight = mapChipHeight || 16;
             
             this.mapchip = mapchip; // マップチップの情報や画像情報が格納されてる
             this.currentFrame = 0;
             this.currentFrameIndex = 0;
+
+            this.drawMap(this.canvas);
         },
 
         /**
          * 描画
          */
-        draw: function(canvas) {
+        drawMap: function(canvas) {
         	for (var i = 0; i < this.mapchip.map.length; ++i) {
         		for (var j = 0; j < this.mapchip.map[i].length; ++j) {
         			var drawingMapChipID = this.mapchip.map[i][j];

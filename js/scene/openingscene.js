@@ -87,6 +87,11 @@
             // 敵をマップに追加
             map.setEnemyGroup(enemyGroup);
 
+            // アイテム
+            var itemGroup = tm.app.CanvasElement();
+            this.itemGroup = itemGroup;
+            map.setItemGroup(itemGroup);
+
             // 攻撃時のエフェクト
             var ss = tm.app.SpriteSheet({
                 image: "slash",
@@ -126,28 +131,30 @@
                 var attackElement = tm.app.Object2D();
                 attackElement.radius = 20;
                 attackElement.position.set(attackMapPosition.x, attackMapPosition.y);
-                // attackElement.setSize(10, 10);
-                // console.dir(attackElement.centerX);
-                // console.dir(attackElement.getBoundingCircle());
                 console.dir("centerX " + attackElement.centerX + " centerY " + attackElement.centerY + " radius " + attackElement.radius);
-
 
                 // 攻撃が当たっているか調べる
                 for (var i = 0; i < enemyGroup.children.length; ++i) {
-                    var position = enemyGroup.children[i].position.clone();
-                    if (enemyGroup.children[i].isHitElementCircle(attackElement)) {
+                    var enemy = enemyGroup.children[i];
+                    var position = enemy.position.clone();
+                    if (enemy.isHitElementCircle(attackElement)) {
                         // ダメージ数を計算
-                        var attack = Math.rand(1, 100);
-                        var damage = player.damage(attack);
+                        var attack = player.getAttackPoint();
+                        var damage = enemy.damage(attack);
 
                         // ダメージ数を表示
                         var damageEffect = ns.DamagedNumber(damage);
-                        damageEffect.effectPositionSet(ns.SCREEN_WIDTH/2 + 10, ns.SCREEN_HEIGHT/2 + 10);
+
+                        // 経験値取得
+                        var exp = enemy.getExp();
+                        player.addExp(exp);
+
+                        // 表示場所を設定
+                        var damagePosition = map.mapCenterToScreenTopLeft(enemy.x, enemy.y);
+                        damageEffect.effectPositionSet(damagePosition.x + 10, damagePosition.y + 5);
                         e.app.currentScene.addChild(damageEffect);
                     }
                 }
-
-
             });
 
             // 画面に追加

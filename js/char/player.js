@@ -16,18 +16,21 @@
 
 			this.level = 1;
 
-			this.maxhp = 40;
-			this.hp = 40;
-			this.maxmp = 40;
-			this.mp = 40;
+			this.maxhp = 30;
+			this.hp = 30;
+			this.maxmp = 10;
+			this.mp = 10;
 
-			this._str = 40; // 攻撃力
-			this._def = 40; // 防御力
+			this._str = 1; // 攻撃力
+			this._def = 1; // 防御力
 			// this._int = 40; // 魔力
-			this._agi = 40; // 素早さ
-			this._luk = 40; // 運
-			this._vit = 40; // 体力
-			this._dex = 40; // 器用さ
+			this._agi = 1; // 素早さ
+			this._luk = 1; // 運
+			this._vit = 1; // 体力
+			this._dex = 1; // 器用さ
+
+			this.exp = 0; // 取得経験値
+			this.nextLevelExp = 3;
 		},
 
 		getLevel: function () { return this.level; },
@@ -36,9 +39,34 @@
 		getMaxMP: function () { return this.maxmp; },
 		getCurrentMP: function () { return this.mp; },
 
+		levelUp: function () {
+			// パラメータ上昇
+			this.maxhp += Math.rand(0, 10);
+			this.maxmp += Math.rand(0, 5);
+			this._str  += Math.rand(0, 2); // 攻撃力
+			this._def  += Math.rand(0, 2); // 防御力
+			// this._int = 40; // 魔力
+			this._agi  += Math.rand(0, 2); // 素早さ
+			this._luk  += Math.rand(0, 2); // 運
+			this._vit  += Math.rand(0, 2); // 体力
+			this._dex  += Math.rand(0, 2); // 器用さ
+		},
+
+		addExp: function (exp) {
+			this.exp += exp;
+			if (this.exp >= this.nextLevelExp) {
+				++this.level;
+				this.nextLevelExp = Math.ceil(this.nextLevelExp * 1.8);
+				this.levelUp();
+				this.addExp(0);
+			}
+		},
+
 		getAttackPoint: function (attack) {
 			// 攻撃力を計算
-			var attackpoint = (this._str + this._dex/5 + this._luk/3)|0;
+			var random = Math.rand(9, 11) / 10;
+			var attackpoint = ((this._str + this._dex/5 + this._luk/3) * random)|0;
+			return attackpoint;
 		},
 
 		damage: function (attack) {
