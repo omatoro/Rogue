@@ -171,9 +171,8 @@
             statusButton.position.set(ns.SCREEN_WIDTH/2, ns.SCREEN_HEIGHT-30-50);
             this.statusButton = statusButton;
             statusButton.addEventListener("pointingend", function(e) {
-                e.app.pushScene(ns.StatusScene(player, ns.SCREEN_WIDTH, ns.SCREEN_HEIGHT));
+                e.app.pushScene(ns.StatusScene(player));
             });
-
 
             // 画面に追加
             this.addChild(map);

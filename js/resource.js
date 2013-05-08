@@ -6,6 +6,7 @@ tm.preload(function() {
 	// tm.sound.SoundManager.add("bgm", "rsc/bgm.mp3", 1); // 音
 
 	tm.graphics.TextureManager.add("player", "rsc/player.png");
+	tm.graphics.TextureManager.add("playerFace", "rsc/char.png");
 
 	tm.graphics.TextureManager.add("enemy1", "rsc/[Monster]Dragon_Black_Uroboros.png");
 

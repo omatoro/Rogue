@@ -18,9 +18,9 @@
 			this.level = 1;
 
 			this.maxhp = 30;
-			this.hp = 30;
+			this.hp    = 30;
 			this.maxmp = 10;
-			this.mp = 10;
+			this.mp    = 10;
 
 			this._str = 1; // 攻撃力
 			this._def = 1; // 防御力
@@ -41,6 +41,14 @@
 		getCurrentHP: function () { return this.hp; },
 		getMaxMP: function () { return this.maxmp; },
 		getCurrentMP: function () { return this.mp; },
+		getSTR: function () { return this._str; },
+		getDEF: function () { return this._def; },
+		getAGI: function () { return this._agi; },
+		getLUK: function () { return this._luk; },
+		getVIT: function () { return this._vit; },
+		getDEX: function () { return this._dex; },
+		getEXP: function () { return this.exp; },
+		getNextLevel: function () { return this.nextLevelExp; },
 
 		levelUp: function () {
 			// パラメータ上昇
