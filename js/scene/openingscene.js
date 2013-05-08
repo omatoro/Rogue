@@ -166,12 +166,22 @@
                 }
             });
 
+            // ステータス画面への遷移ボタン
+            var statusButton = tm.app.GlossyButton(150, 60, "blue", "ステータス");
+            statusButton.position.set(ns.SCREEN_WIDTH/2, ns.SCREEN_HEIGHT-30-50);
+            this.statusButton = statusButton;
+            statusButton.addEventListener("pointingend", function(e) {
+                e.app.pushScene(ns.StatusScene(player, ns.SCREEN_WIDTH, ns.SCREEN_HEIGHT));
+            });
+
+
             // 画面に追加
             this.addChild(map);
             this.addChild(pad);
             this.addChild(player);
             this.addChild(slash);
             this.addChild(attackButton);
+            this.addChild(statusButton);
 
             // ステータス表示
             this.fromJSON(UI_DATA.LABELS);

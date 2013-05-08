@@ -305,6 +305,10 @@
                         var itemEffect = ns.DamagedNumber(getItem.name, 100, 255, 150, 80);
                         itemEffect.effectPositionSet(itemPosition.x + 10, itemPosition.y + 5);
                         app.currentScene.addChild(itemEffect);
+
+                        // プレイヤーにアイテム追加(このままの処理だったらドロップアイテムインスタンスが生き続ける)
+                        var player = app.currentScene.getChildByName("player");
+                        player.addItem(getItem);
                     }
                 }
             }

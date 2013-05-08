@@ -7,6 +7,7 @@
 		superClass : ns.AnimationCharactor,
 
 		init: function (pad) {
+			this.name = "player";
 			this.superInit("player");
 			// プレイヤーなので操作を受け付けるように設定
 			this.setInputPad(pad);
@@ -31,6 +32,8 @@
 
 			this.exp = 0; // 取得経験値
 			this.nextLevelExp = 3;
+
+			this.item = [];
 		},
 
 		getLevel: function () { return this.level; },
@@ -60,6 +63,14 @@
 				this.levelUp();
 				this.addExp(0);
 			}
+		},
+
+		addItem: function (item) {
+			this.item.push(item);
+		},
+
+		getItem: function () {
+			return this.item;
 		},
 
 		getAttackPoint: function (attack) {
