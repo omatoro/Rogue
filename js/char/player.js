@@ -82,7 +82,7 @@
 		},
 
 		attack: function () {
-			console.log("attack");
+			// console.log("attack");
 			return this.angle;
 		},
 

@@ -65,6 +65,9 @@
 		update: function (app) {
 			// マップ移動
 			this._move(app);
+
+            // 宝箱とのヒット判定
+            this._isHitTreasureBox(app);
 		},
 
         setEnemyGroup: function (enemyGroup) {
@@ -78,12 +81,21 @@
             this.addChild(itemGroup); // MAPの中心座標が0,0となる
         },
 
+        addItem: function (dropItem) {
+            this.itemGroup.addChild(dropItem);
+        },
+
         setPlayer: function (initPosition) {
             // プレイヤーの位置を別として保持
             this.isPlayer = true;
             this.playerPosition = tm.geom.Vector2(
                 this.width/2  + (ns.SCREEN_WIDTH/2  - initPosition.x),
                 this.height/2 + (ns.SCREEN_HEIGHT/2 - initPosition.y) + PLAYER_POSITION_Y);
+
+            // プレイヤーのヒット判定用にポイントを作成
+            var playerElement = tm.app.Object2D();
+            playerElement.radius = 20;
+            this.playerElement = playerElement;
         },
 
         screenLeftTopToMapCenter: function (x, y) {
@@ -276,6 +288,26 @@
                 if (movedX > chipRect.right) { result |= HIT_RIGHT; }
             }
             return result;
+        },
+
+        _isHitTreasureBox: function (app) {
+            if (this.isPlayer) {
+                var items = this.itemGroup.children;
+                var playerPosition = this.mapLeftTopToMapCenter(this.playerPosition.x, this.playerPosition.y);
+                this.playerElement.position.set(playerPosition.x, playerPosition.y);
+
+                for (var i = 0; i < items.length; ++i) {
+                    var itemPosition = items[i].position.clone();
+                    var getItem = items[i].isHit(this.playerElement);
+                    if (getItem !== null) {
+                        // 表示場所を設定
+                        var itemPosition = this.mapCenterToScreenTopLeft(itemPosition.x, itemPosition.y);
+                        var itemEffect = ns.DamagedNumber(getItem.name, 100, 255, 150, 80);
+                        itemEffect.effectPositionSet(itemPosition.x + 10, itemPosition.y + 5);
+                        app.currentScene.addChild(itemEffect);
+                    }
+                }
+            }
         },
 
 	});

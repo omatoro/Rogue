@@ -69,6 +69,12 @@
             map.initMapPosition(safePosition);
             map.setPlayer(safePosition);
 
+            // アイテム
+            var itemList   = ns.ItemList();
+            var itemGroup  = tm.app.CanvasElement();
+            this.itemGroup = itemGroup;
+            map.setItemGroup(itemGroup);
+
             // 敵
             var enemyGroup = tm.app.CanvasElement();
             this.enemyGroup = enemyGroup;
@@ -86,11 +92,6 @@
             }
             // 敵をマップに追加
             map.setEnemyGroup(enemyGroup);
-
-            // アイテム
-            var itemGroup = tm.app.CanvasElement();
-            this.itemGroup = itemGroup;
-            map.setItemGroup(itemGroup);
 
             // 攻撃時のエフェクト
             var ss = tm.app.SpriteSheet({
@@ -131,7 +132,7 @@
                 var attackElement = tm.app.Object2D();
                 attackElement.radius = 20;
                 attackElement.position.set(attackMapPosition.x, attackMapPosition.y);
-                console.dir("centerX " + attackElement.centerX + " centerY " + attackElement.centerY + " radius " + attackElement.radius);
+                // console.dir("centerX " + attackElement.centerX + " centerY " + attackElement.centerY + " radius " + attackElement.radius);
 
                 // 攻撃が当たっているか調べる
                 for (var i = 0; i < enemyGroup.children.length; ++i) {
@@ -148,6 +149,14 @@
                         // 経験値取得
                         var exp = enemy.getExp();
                         player.addExp(exp);
+
+                        // アイテムドロップ
+                        var itemData = itemList.get(enemy.getDropItem());
+                        if (itemData !== null) {
+                            var dropItem = ns.DropItem(itemData);
+                            dropItem.position.set(enemy.x, enemy.y);
+                            map.addItem(dropItem);
+                        }
 
                         // 表示場所を設定
                         var damagePosition = map.mapCenterToScreenTopLeft(enemy.x, enemy.y);

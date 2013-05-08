@@ -11,7 +11,7 @@
 	ns.DamagedNumber = tm.createClass({
 	    superClass: tm.app.Shape,
 
-	    init: function(text) {
+	    init: function(text, colorR, colorG, colorB, far) {
 	    	// 文字を先に作成(幅を取得するため)
 	    	var label = tm.app.Label(text + "", FONT_SIZE);
             label.fillStyle = FONT_STYLE;
@@ -24,6 +24,14 @@
 
             // 初期化
 	        this.superInit(width, height);
+
+	        // 消えながら離れるときの距離
+	        this.far = far || 50;
+
+	        // 色
+	        this.colorR = colorR || 255;
+	        this.colorG = colorG || 255;
+	        this.colorB = colorB || 255;
 
 	        // フォントの描画場所
             label.x = 0;
@@ -46,7 +54,7 @@
 
 	        // だんだん消えていく
             this.tweener.
-                to({"alpha": -1, "x": x, "y": y-50}, 700);
+                to({"alpha": -1, "x": x, "y": y - this.far}, 700);
 	    },
 
 	    update: function () {
@@ -64,7 +72,7 @@
 	        var lineWidth   = 0;
 
 	        // テキスト描画部分
-	        c.fillStyle = tm.graphics.Color.createStyleRGBA(255, 255, 255, this.alpha*0.5/1000);
+	        c.fillStyle = tm.graphics.Color.createStyleRGBA(this.colorR, this.colorG, this.colorB, this.alpha*0.5/1000);
 	        c.lineWidth = 0;
 	        c.fillRoundRect(lineWidth, lineWidth, this.width-(lineWidth*2), this.height-(lineWidth*2), 5);
 
