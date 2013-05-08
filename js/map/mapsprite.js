@@ -24,13 +24,13 @@
             this.currentFrame = 0;
             this.currentFrameIndex = 0;
 
-            this.drawMap(this.canvas);
+            this.createMap();
         },
 
         /**
-         * 描画
+         * 描画時のマップ(canvas)を作成
          */
-        drawMap: function(canvas) {
+        createMap: function() {
         	for (var i = 0; i < this.mapchip.map.length; ++i) {
         		for (var j = 0; j < this.mapchip.map[i].length; ++j) {
         			var drawingMapChipID = this.mapchip.map[i][j];
@@ -38,11 +38,11 @@
         			var srcRect = this.mapchip.getMapChip(drawingMapChipID, 4);//this.currentFrame);
         			var element = this.mapchip.images[drawingMapChipID].element;
 
-        			var dx = -this.width*this.originX  + (j*this.mapChipWidth);
-        			var dy = -this.height*this.originY + (i*this.mapChipHeight);
+        			var dx =  j*this.mapChipWidth;
+        			var dy =  i*this.mapChipHeight;
 
         			// http://www.html5.jp/canvas/ref/method/drawImage.html
-		            canvas.drawImage(
+		            this.canvas.drawImage(
 		            	element,
 		                srcRect.x,
 		                srcRect.y,
