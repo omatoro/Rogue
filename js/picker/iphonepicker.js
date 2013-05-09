@@ -208,7 +208,14 @@
 	        this.pushedButton.ite = null;
 	        
 	        // 引数のデータ型を調べる
-	        if (array instanceof Array) { this.argType = "array"; }
+	        if (array instanceof Array) {
+	        	if (!(array[0] instanceof Array) && !(typeof array === "string" || array instanceof String)) {
+	        		this.argType = "complex";
+	        	}
+	        	else {
+	        		this.argType = "array";
+	        	}
+	        }
 	        else if (typeof array === "string" || array instanceof String) { this.argType = "string"; }
 	        else { this.argType = "object"; }
 	        
@@ -242,6 +249,23 @@
 	                ++i;
 	            }
 	            this.buttonNum = i;
+	        }
+	        // 4.配列(中身はオブジェクト)
+	        /*
+	         * 書式
+	         * [
+	         *     { text: "", subData: {} }
+	         * ]
+	         */
+	        else if (this.argType === "complex") {
+	        	this.buttonNum = array.length;
+	            var i = 0;
+	            for (var i = 0; i < this.buttonNum; ++i) {
+	            // for (var key in array) {
+	                this.button[i] = PullDownStringButton(MENU_ELEMENT_WIDTH, MENU_ELEMENT_HEIGHT, array[i].text, array[i].subData);
+	                this.button[i].setPosition(MENU_ELEMENT_CENTER_X, -(IN_MENU_SCROLL_HALF_HEIGHT)+(MENU_ELEMENT_HEIGHT/2)+(i*(MENU_ELEMENT_HEIGHT + MENU_ELEMENT_BETTWEEN_PADDING)));
+	                this.addChild(this.button[i]);
+	            }
 	        }
 
 	        this.interaction.enabled = true;
@@ -315,6 +339,12 @@
 	                    
 	                    // PullDownクラスにオブジェクトが指定された場合
 	                    else if (this.argType === "object") {
+	                        this.pushedButton.label.text   = this.button[i].label.text;
+	                        this.pushedButton.returnedData = this.button[i].subData; // 値、もしくは関数を保持
+	                        this.pushedButton.ite = i;
+	                    }
+	                    // PullDownクラスに配列(中身はオブジェクト)が指定された場合
+	                    else if (this.argType === "complex") {
 	                        this.pushedButton.label.text   = this.button[i].label.text;
 	                        this.pushedButton.returnedData = this.button[i].subData; // 値、もしくは関数を保持
 	                        this.pushedButton.ite = i;

@@ -163,11 +163,14 @@
                 // メニューボタンが押されたらプルダウンを行う
                 var mouse_position = e.app.pointing;
                 if (this.isHitPointRect(mouse_position.x, mouse_position.y)) {
-
                     // 表示するデータを作成
-                    var pickerData = {"装備無し": ""};
+                    var pickerData = [{text: "装備無し", subData: null}];
                     for (var i = 0; i < parent.player.getItem().length; ++i) {
-                        pickerData[parent.player.getItem()[i].name] = parent.player.getItem()[i];
+                        var pushData = {
+                            text:    parent.player.getItem()[i].name,
+                            subData: parent.player.getItem()[i]
+                        }
+                        pickerData.push(pushData);
                     }
                     e.app.pushScene(ns.iPhonePicker(this, pickerData));
                 }

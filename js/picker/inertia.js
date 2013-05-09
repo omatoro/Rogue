@@ -1,5 +1,5 @@
 /**
- * imitate iPhone picker
+ * Inertia
  */
 (function(ns) {
 
