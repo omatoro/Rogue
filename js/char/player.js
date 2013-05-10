@@ -34,6 +34,9 @@
 			this.nextLevelExp = 3;
 
 			this.item = [];
+
+			this.equipedWeapon = null;
+			this.equipedArmor  = null;
 		},
 
 		getLevel: function () { return this.level; },
@@ -81,15 +84,60 @@
 			return this.item;
 		},
 
+		equipWeapon: function (item) {
+			this.equipedWeapon = item || null;
+		},
+		getWeapon: function () {
+			if (this.equipedWeapon === null) {
+				var result = {
+					dropImage: null,
+					name: "装備無し",
+					status: {
+						str: 0,
+						def: 0,
+						agi: 0,
+						luk: 0,
+						vit: 0,
+						dex: 0
+					}
+				};
+				return result;
+			}
+			return this.equipedWeapon;
+		},
+
+		equipArmor: function (item) {
+			this.equipedArmor = item || null;
+		},
+		getArmor: function () {
+			if (this.equipedArmor === null) {
+				var result = {
+					dropImage: null,
+					name: "装備無し",
+					status: {
+						str: 0,
+						def: 0,
+						agi: 0,
+						luk: 0,
+						vit: 0,
+						dex: 0
+					}
+				};
+				return result;
+			}
+			return this.equipedArmor;
+		},
+
 		getAttackPoint: function (attack) {
 			// 攻撃力を計算
 			var random = Math.rand(9, 11) / 10;
 			var attackpoint = ((this._str + this._dex/5 + this._luk/3) * random)|0;
+			attackpoint += this.getWeapon().status.str + this.getArmor().status.str;
 			return attackpoint;
 		},
 
 		damage: function (attack) {
-			var damage = (attack - this._def) |0;
+			var damage = (attack - this._def - this.getWeapon().status.def - this.getArmor().status.def) |0;
 			damage = (damage < 0) ? 0 : damage;
 
 			this.hp -= damage;
@@ -101,7 +149,6 @@
 		},
 
 		attack: function () {
-			// console.log("attack");
 			return this.angle;
 		},
 

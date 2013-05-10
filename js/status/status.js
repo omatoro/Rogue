@@ -154,32 +154,88 @@
             face.position.set(170, 200);
 
             // 武器選択
-            var weaponButton = tm.app.GlossyButton(280, 60, "gray", "装備無し");
+            var weaponName = this.player.getWeapon() ? this.player.getWeapon().name : "装備無し";
+            var weaponButton = tm.app.GlossyButton(280, 60, "gray", weaponName);
             weaponButton.setPosition(200, 500);
             this.weaponButton = weaponButton;
 
             // メニューボタン押下時の動作
             this.weaponButton.addEventListener("pointingend", function(e) {
                 // メニューボタンが押されたらプルダウンを行う
-                var mouse_position = e.app.pointing;
-                if (this.isHitPointRect(mouse_position.x, mouse_position.y)) {
-                    // 表示するデータを作成
-                    var pickerData = [{text: "装備無し", subData: null}];
-                    for (var i = 0; i < parent.player.getItem().length; ++i) {
+                // 表示するデータを作成
+                var pickerData = [{
+                    text: "装備無し",
+                    subData: {
+                        dropImage: null,
+                        name: "装備無し",
+                        status: {
+                            str: 0,
+                            def: 0,
+                            agi: 0,
+                            luk: 0,
+                            vit: 0,
+                            dex: 0
+                        }
+                    }
+                }];
+                for (var i = 0; i < parent.player.getItem().length; ++i) {
+                    var itemType = parent.player.getItem()[i].type;
+                    if (itemType === "shortsword" ||
+                            itemType === "longsword") {
                         var pushData = {
                             text:    parent.player.getItem()[i].name,
                             subData: parent.player.getItem()[i]
                         }
                         pickerData.push(pushData);
                     }
-                    e.app.pushScene(ns.iPhonePicker(this, pickerData));
                 }
+                e.app.pushScene(ns.iPhonePicker(this, pickerData));
+            });
+
+            // 防具選択
+            var armorName = this.player.getArmor() ? this.player.getArmor().name : "装備無し";
+            var armorButton = tm.app.GlossyButton(280, 60, "gray", armorName);
+            armorButton.setPosition(200, 580);
+            this.armorButton = armorButton;
+
+            // メニューボタン押下時の動作
+            this.armorButton.addEventListener("pointingend", function(e) {
+                // メニューボタンが押されたらプルダウンを行う
+                // 表示するデータを作成
+                var pickerData = [{
+                    text: "装備無し",
+                    subData: {
+                        dropImage: null,
+                        name: "装備無し",
+                        status: {
+                            str: 0,
+                            def: 0,
+                            agi: 0,
+                            luk: 0,
+                            vit: 0,
+                            dex: 0
+                        }
+                    }
+                }];
+                for (var i = 0; i < parent.player.getItem().length; ++i) {
+                    var itemType = parent.player.getItem()[i].type;
+                    if (itemType === "cloths" ||
+                            itemType === "lightarmor") {
+                        var pushData = {
+                            text:    parent.player.getItem()[i].name,
+                            subData: parent.player.getItem()[i]
+                        }
+                        pickerData.push(pushData);
+                    }
+                }
+                e.app.pushScene(ns.iPhonePicker(this, pickerData));
             });
 
             // 画面に追加
             parent.addChild(this);
             parent.addChild(endButton);
             parent.addChild(weaponButton);
+            parent.addChild(armorButton);
             parent.addChild(face);
 
             // ステータス表示
@@ -195,12 +251,12 @@
             this.statusEXP.text   = "EXP " + this.player.getEXP() + "/" + this.player.getNextLevel();
             this.statusHP.text    = "HP "  + this.player.getCurrentHP() + "/" + this.player.getMaxHP();
             this.statusMP.text    = "MP "  + this.player.getCurrentMP() + "/" + this.player.getMaxMP();
-            this.statusSTR.text   = "STR " + this.player.getSTR();
-            this.statusDEF.text   = "DEF " + this.player.getDEF();
-            this.statusAGI.text   = "AGI " + this.player.getAGI();
-            this.statusLUK.text   = "LUK " + this.player.getLUK();
-            this.statusVIT.text   = "VIT " + this.player.getVIT();
-            this.statusDEX.text   = "DEX " + this.player.getDEX();
+            this.statusSTR.text   = "STR " + this.player.getSTR() + " + " + (this.player.getWeapon().status.str + this.player.getArmor().status.str);
+            this.statusDEF.text   = "DEF " + this.player.getDEF() + " + " + (this.player.getWeapon().status.def + this.player.getArmor().status.def);
+            this.statusAGI.text   = "AGI " + this.player.getAGI() + " + " + (this.player.getWeapon().status.agi + this.player.getArmor().status.agi);
+            this.statusLUK.text   = "LUK " + this.player.getLUK() + " + " + (this.player.getWeapon().status.luk + this.player.getArmor().status.luk);
+            this.statusVIT.text   = "VIT " + this.player.getVIT() + " + " + (this.player.getWeapon().status.vit + this.player.getArmor().status.vit);
+            this.statusDEX.text   = "DEX " + this.player.getDEX() + " + " + (this.player.getWeapon().status.dex + this.player.getArmor().status.dex);
         },
         
         _refresh: function() {
@@ -212,6 +268,20 @@
             c.strokeStyle   = "rgba(100,100,100,0.75)";
             c.lineWidth     = 2;
             c.strokeRoundRect(2, 2, this.width-4, this.height-4, 10);
+        },
+
+        update: function () {
+            // ピッカーで何か選んだ時の動作
+            if (this.weaponButton.returnedData) {
+                this.player.equipWeapon(this.weaponButton.returnedData);
+                this._drawStatus();
+                this.weaponButton.returnedData = null;
+            }
+            if (this.armorButton.returnedData) {
+                this.player.equipArmor(this.armorButton.returnedData);
+                this._drawStatus();
+                this.armorButton.returnedData = null;
+            }
         },
     });
 })(game);
