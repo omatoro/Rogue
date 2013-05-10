@@ -60,6 +60,9 @@
 
             // スクリーン中心にプレイヤーを設置するか
             this.isPlayer = false;
+
+            // 次のステージに進むかどうかのフラグ
+            this._isNextStage = false;
 		},
 
 		update: function (app) {
@@ -68,7 +71,28 @@
 
             // 宝箱とのヒット判定
             this._isHitTreasureBox(app);
+
+            // プレイヤーと階段のヒット判定
+            this._isHitStairs(app);
 		},
+
+        isNextStage: function () {
+            return this._isNextStage;
+        },
+
+        setStairs: function () {
+            // 階段
+            var stairs = tm.app.Sprite(64, 64, "stairs");
+            var stairsPosition = this.getRandomSafeMapChipPosition();
+            stairsPosition = this.mapLeftTopToMapCenter(
+                stairsPosition.x * this.mapChipWidth + this.mapChipWidth/2,
+                stairsPosition.y * this.mapChipHeight);
+            stairs.position.set(stairsPosition.x, stairsPosition.y);
+            this.stairs = stairs;
+            console.log("x : " + stairs.x + " y : " + stairs.y);
+
+            this.addChild(stairs);
+        },
 
         setEnemyGroup: function (enemyGroup) {
             this.isEnemy = true;
@@ -310,6 +334,18 @@
                         var player = app.currentScene.getChildByName("player");
                         player.addItem(getItem);
                     }
+                }
+            }
+        },
+
+        _isHitStairs: function (app) {
+            if (this.isPlayer) {
+                var playerPosition = this.mapLeftTopToMapCenter(this.playerPosition.x, this.playerPosition.y);
+                this.playerElement.position.set(playerPosition.x, playerPosition.y);
+
+                if (this.stairs.isHitElementCircle(this.playerElement)) {
+                    // 次のステージへの遷移処理はOpeningSceneクラスで行う
+                    this._isNextStage = true;
                 }
             }
         },

@@ -3,9 +3,25 @@
  */
 (function(ns) {
 
-    var STATUS_UP_PADDING = 90 - (ns.SCREEN_HEIGHT-50)/2;
-    var STATUS_LEFT_PADDING = 0;
-    var STATUS_BETWEEN_PADDING = 35;
+    // ステータス画面のサイズなど
+    var STATUS_WIDTH_PADDING = 25;
+    var STATUS_WIDTH  = ns.SCREEN_WIDTH  - (STATUS_WIDTH_PADDING*2);
+    var STATUS_HEIGHT = ns.SCREEN_HEIGHT - 100;
+
+    var STATUS_TOP_PADDING = 50;
+    var STATUS_CENTER_X = ns.SCREEN_WIDTH/2;
+    var STATUS_CENTER_Y = STATUS_TOP_PADDING + STATUS_HEIGHT/2;
+
+    var EXIT_BUTTON_PADDING = 25;
+    var EXIT_BUTTON_WIDTH  = 150;
+    var EXIT_BUTTON_HEIGHT = 60;
+    var EXIT_BUTTON_CENTER_X = ns.SCREEN_WIDTH - STATUS_WIDTH_PADDING - (EXIT_BUTTON_WIDTH/2) - EXIT_BUTTON_PADDING;
+    var EXIT_BUTTON_CENTER_Y = STATUS_TOP_PADDING + EXIT_BUTTON_HEIGHT/2 + EXIT_BUTTON_PADDING;
+
+    // ステータス表示のラベルの定数
+    var STATUS_LABEL_UP_PADDING      = - STATUS_HEIGHT/2 + (EXIT_BUTTON_PADDING + EXIT_BUTTON_HEIGHT) + EXIT_BUTTON_HEIGHT;
+    var STATUS_LABEL_LEFT_PADDING    = 60;
+    var STATUS_LABEL_BETWEEN_PADDING = 45;
 
     // ラベルのリスト
     var UI_DATA = {
@@ -13,8 +29,8 @@
             children: [{
                 type: "Label",
                 name: "statusLevel",
-                x: STATUS_LEFT_PADDING,
-                y: STATUS_UP_PADDING,
+                x: STATUS_LABEL_LEFT_PADDING,
+                y: STATUS_LABEL_UP_PADDING,
                 width: ns.SCREEN_WIDTH,
                 fillStyle: "white",
                 text: " ",
@@ -23,8 +39,8 @@
             },{
                 type: "Label",
                 name: "statusName",
-                x: STATUS_LEFT_PADDING,
-                y: STATUS_UP_PADDING + (STATUS_BETWEEN_PADDING),
+                x: STATUS_LABEL_LEFT_PADDING,
+                y: STATUS_LABEL_UP_PADDING + (STATUS_LABEL_BETWEEN_PADDING),
                 width: ns.SCREEN_WIDTH,
                 fillStyle: "white",
                 text: " ",
@@ -33,8 +49,8 @@
             },{
                 type: "Label",
                 name: "statusHP",
-                x: STATUS_LEFT_PADDING,
-                y: STATUS_UP_PADDING + (STATUS_BETWEEN_PADDING*2),
+                x: STATUS_LABEL_LEFT_PADDING,
+                y: STATUS_LABEL_UP_PADDING + (STATUS_LABEL_BETWEEN_PADDING*2),
                 width: ns.SCREEN_WIDTH,
                 fillStyle: "white",
                 text: " ",
@@ -43,8 +59,8 @@
             },{
                 type: "Label",
                 name: "statusMP",
-                x: STATUS_LEFT_PADDING,
-                y: STATUS_UP_PADDING + (STATUS_BETWEEN_PADDING*3),
+                x: STATUS_LABEL_LEFT_PADDING,
+                y: STATUS_LABEL_UP_PADDING + (STATUS_LABEL_BETWEEN_PADDING*3),
                 width: ns.SCREEN_WIDTH,
                 fillStyle: "white",
                 text: " ",
@@ -53,8 +69,8 @@
             },{
                 type: "Label",
                 name: "statusEXP",
-                x: STATUS_LEFT_PADDING,
-                y: STATUS_UP_PADDING + (STATUS_BETWEEN_PADDING*4),
+                x: STATUS_LABEL_LEFT_PADDING,
+                y: STATUS_LABEL_UP_PADDING + (STATUS_LABEL_BETWEEN_PADDING*4),
                 width: ns.SCREEN_WIDTH,
                 fillStyle: "white",
                 text: " ",
@@ -63,8 +79,8 @@
             },{
                 type: "Label",
                 name: "statusSTR",
-                x: STATUS_LEFT_PADDING,
-                y: STATUS_UP_PADDING + (STATUS_BETWEEN_PADDING*5),
+                x: STATUS_LABEL_LEFT_PADDING,
+                y: STATUS_LABEL_UP_PADDING + (STATUS_LABEL_BETWEEN_PADDING*5),
                 width: ns.SCREEN_WIDTH,
                 fillStyle: "white",
                 text: " ",
@@ -73,8 +89,8 @@
             },{
                 type: "Label",
                 name: "statusDEF",
-                x: STATUS_LEFT_PADDING,
-                y: STATUS_UP_PADDING + (STATUS_BETWEEN_PADDING*6),
+                x: STATUS_LABEL_LEFT_PADDING,
+                y: STATUS_LABEL_UP_PADDING + (STATUS_LABEL_BETWEEN_PADDING*6),
                 width: ns.SCREEN_WIDTH,
                 fillStyle: "white",
                 text: " ",
@@ -83,8 +99,8 @@
             },{
                 type: "Label",
                 name: "statusAGI",
-                x: STATUS_LEFT_PADDING,
-                y: STATUS_UP_PADDING + (STATUS_BETWEEN_PADDING*7),
+                x: STATUS_LABEL_LEFT_PADDING,
+                y: STATUS_LABEL_UP_PADDING + (STATUS_LABEL_BETWEEN_PADDING*7),
                 width: ns.SCREEN_WIDTH,
                 fillStyle: "white",
                 text: " ",
@@ -93,8 +109,8 @@
             },{
                 type: "Label",
                 name: "statusLUK",
-                x: STATUS_LEFT_PADDING,
-                y: STATUS_UP_PADDING + (STATUS_BETWEEN_PADDING*8),
+                x: STATUS_LABEL_LEFT_PADDING,
+                y: STATUS_LABEL_UP_PADDING + (STATUS_LABEL_BETWEEN_PADDING*8),
                 width: ns.SCREEN_WIDTH,
                 fillStyle: "white",
                 text: " ",
@@ -103,8 +119,8 @@
             },{
                 type: "Label",
                 name: "statusVIT",
-                x: STATUS_LEFT_PADDING,
-                y: STATUS_UP_PADDING + (STATUS_BETWEEN_PADDING*9),
+                x: STATUS_LABEL_LEFT_PADDING,
+                y: STATUS_LABEL_UP_PADDING + (STATUS_LABEL_BETWEEN_PADDING*9),
                 width: ns.SCREEN_WIDTH,
                 fillStyle: "white",
                 text: " ",
@@ -113,8 +129,8 @@
             },{
                 type: "Label",
                 name: "statusDEX",
-                x: STATUS_LEFT_PADDING,
-                y: STATUS_UP_PADDING + (STATUS_BETWEEN_PADDING*10),
+                x: STATUS_LABEL_LEFT_PADDING,
+                y: STATUS_LABEL_UP_PADDING + (STATUS_LABEL_BETWEEN_PADDING*10),
                 width: ns.SCREEN_WIDTH,
                 fillStyle: "white",
                 text: " ",
@@ -128,8 +144,8 @@
         superClass : tm.app.Shape,
 
         init: function(parent) {
-            this.superInit(ns.SCREEN_WIDTH-50, ns.SCREEN_HEIGHT-100);
-            this.setPosition(ns.SCREEN_WIDTH/2, ns.SCREEN_HEIGHT/2);
+            this.superInit(STATUS_WIDTH, STATUS_HEIGHT);
+            this.setPosition(STATUS_CENTER_X, STATUS_CENTER_Y);
 
             this.backgroundColor = "rgba(55, 120, 220, 0.5)";
             this.alpha = 1.0;
@@ -142,8 +158,8 @@
             this.player = parent.player;
 
             // ステータス終了ボタン
-            var endButton = tm.app.GlossyButton(150, 60, "blue", "終了");
-            endButton.position.set(ns.SCREEN_WIDTH-150, 80);
+            var endButton = tm.app.GlossyButton(EXIT_BUTTON_WIDTH, EXIT_BUTTON_HEIGHT, "blue", "終了");
+            endButton.position.set(EXIT_BUTTON_CENTER_X, EXIT_BUTTON_CENTER_Y);
             this.endButton = endButton;
             endButton.addEventListener("pointingend", function(e) {
                 e.app.popScene();

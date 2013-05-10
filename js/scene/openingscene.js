@@ -43,7 +43,7 @@
     ns.OpeningScene = tm.createClass({
         superClass : tm.app.Scene,
 
-        init : function(backnum, speed, speedName, questnum) {
+        init : function(continuePlayer) {
             this.superInit();
 
             // コントローラーパッド
@@ -51,7 +51,7 @@
             pad.position.set(80, ns.SCREEN_HEIGHT - 80);
 
             // プレイヤー
-            var player = ns.Player(pad);
+            var player = continuePlayer || ns.Player(pad);
             this.player = player;
             player.position.set(ns.SCREEN_WIDTH/2, ns.SCREEN_HEIGHT/2);
 
@@ -66,6 +66,7 @@
             // マップの中心位置を計算する(safePositionがスクリーンの中心に来るように)
             safePosition.x = ns.SCREEN_WIDTH/2  - safePosition.x;
             safePosition.y = ns.SCREEN_HEIGHT/2 - safePosition.y;
+            map.setStairs();
             map.initMapPosition(safePosition);
             map.setPlayer(safePosition);
 
@@ -114,6 +115,9 @@
             attackButton.position.set(ns.SCREEN_WIDTH-50-50, ns.SCREEN_HEIGHT-30-50);
             this.attackButton = attackButton;
             attackButton.addEventListener("pointingend", function(e) {
+
+                console.log("x : " + map.playerPosition.x + " y : " + map.playerPosition.y);
+
                 // 攻撃の方向を調べる
                 var attackAngle = player.attack();
                 var attackVelocity = tm.geom.Vector2(0,0).setDegree(attackAngle, 1);
@@ -132,7 +136,6 @@
                 var attackElement = tm.app.Object2D();
                 attackElement.radius = 20;
                 attackElement.position.set(attackMapPosition.x, attackMapPosition.y);
-                // console.dir("centerX " + attackElement.centerX + " centerY " + attackElement.centerY + " radius " + attackElement.radius);
 
                 // 攻撃が当たっているか調べる
                 for (var i = 0; i < enemyGroup.children.length; ++i) {
@@ -202,14 +205,13 @@
         },
 
         update : function(app) {
-
-            // // プレイヤーの攻撃
-            // if () {
-            //     ;
-            // }
-
             // ステータスの描画
             this.drawStatus();
+
+            // 次のステージに進むフラグがたったらマップ更新
+            if (this.map.isNextStage()) {
+                app.replaceScene(ns.OpeningScene(this.player, this.itemGroup));
+            }
         }
     });
 

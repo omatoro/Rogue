@@ -16,6 +16,7 @@ tm.preload(function() {
 	tm.graphics.TextureManager.add("Dirt1_pipo", "rsc/[A]Dirt1_pipo.png");
 	tm.graphics.TextureManager.add("Grass1_pipo", "rsc/[A]Grass1_pipo.png");
 	tm.graphics.TextureManager.add("Water2_pipo", "rsc/[A]Water2_pipo.png");
+	tm.graphics.TextureManager.add("stairs", "rsc/stairs.png");
 
 	// アイテム
 	tm.graphics.TextureManager.add("dropWeapon",   "rsc/drop_weapon.png");
