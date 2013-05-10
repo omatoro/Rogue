@@ -89,7 +89,6 @@
                 stairsPosition.y * this.mapChipHeight);
             stairs.position.set(stairsPosition.x, stairsPosition.y);
             this.stairs = stairs;
-            console.log("x : " + stairs.x + " y : " + stairs.y);
 
             this.addChild(stairs);
         },

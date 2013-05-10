@@ -40,7 +40,7 @@
         }
     };
 
-    ns.OpeningScene = tm.createClass({
+    ns.MainScene = tm.createClass({
         superClass : tm.app.Scene,
 
         init : function(continuePlayer) {
@@ -79,18 +79,9 @@
             // 敵
             var enemyGroup = tm.app.CanvasElement();
             this.enemyGroup = enemyGroup;
-            var ENEMY_NUM = 80; // 敵の出現数
-            for (var i = 0; i < ENEMY_NUM; ++i) {
-                var enemy = ns.Enemy();
-                // Sceneの座標に変換
-                var safeEnemyPosition = map.getRandomSafeMapChipPosition();
-                safeEnemyPosition = map.mapLeftTopToMapCenter(
-                    safeEnemyPosition.x * map.mapChipWidth  + map.mapChipWidth/2,
-                    safeEnemyPosition.y * map.mapChipHeight);
+            ns.StageManager(ns.MainScene.STAGE_NUMBER, enemyGroup, map);
 
-                enemy.position.set(safeEnemyPosition.x, safeEnemyPosition.y);
-                enemyGroup.addChild(enemy);
-            }
+
             // 敵をマップに追加
             map.setEnemyGroup(enemyGroup);
 
@@ -115,9 +106,6 @@
             attackButton.position.set(ns.SCREEN_WIDTH-50-50, ns.SCREEN_HEIGHT-30-50);
             this.attackButton = attackButton;
             attackButton.addEventListener("pointingend", function(e) {
-
-                console.log("x : " + map.playerPosition.x + " y : " + map.playerPosition.y);
-
                 // 攻撃の方向を調べる
                 var attackAngle = player.attack();
                 var attackVelocity = tm.geom.Vector2(0,0).setDegree(attackAngle, 1);
@@ -210,9 +198,13 @@
 
             // 次のステージに進むフラグがたったらマップ更新
             if (this.map.isNextStage()) {
-                app.replaceScene(ns.OpeningScene(this.player, this.itemGroup));
+                ++ns.MainScene.STAGE_NUMBER;
+                console.log(ns.MainScene.STAGE_NUMBER);
+                app.replaceScene(ns.MainScene(this.player, this.itemGroup));
             }
         }
     });
+
+    ns.MainScene.STAGE_NUMBER = 1;
 
 })(game);

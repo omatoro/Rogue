@@ -6,22 +6,18 @@
 	ns.Enemy = tm.createClass({
 		superClass : ns.AnimationCharactor,
 
-		init: function () {
-			this.superInit("enemy1", {
-				width:  180/6,
-				height: 112/4,
-				count:  24,
-			}, 3);
+		init: function (image, imageData, drawImageScaleSize) {
+			this.superInit(image, imageData, drawImageScaleSize);
 			// プレイヤーなので操作を受け付けるように設定
 			this.isInput = false;
 			this.isAuto  = true;
 
-			this.maxhp = 5;
-			this.hp    = 5;
+			this.maxhp = 0;
+			this.hp    = 0;
 			this.maxmp = 0;
 			this.mp    = 0;
 
-			this._str  = 1; // 攻撃力
+			this._str  = 0; // 攻撃力
 			this._def  = 0; // 防御力
 			// this._int = 1; // 魔力
 			this._agi  = 0; // 素早さ
@@ -29,9 +25,9 @@
 			this._vit  = 0; // 体力
 			this._dex  = 0; // 器用さ
 
-			this.exp = 1; // 倒した時の経験値
+			this.exp = 0; // 倒した時の経験値
 
-			this.speed = 4;
+			this.speed = 0;
 			this.velocity = tm.geom.Vector2(0, 0);
 
 			this.dropItemList = [
@@ -42,9 +38,9 @@
 			];
 		},
 
-		getMaxHP: function () { return this.maxhp; },
+		getMaxHP:     function () { return this.maxhp; },
 		getCurrentHP: function () { return this.hp; },
-		getMaxMP: function () { return this.maxmp; },
+		getMaxMP:     function () { return this.maxmp; },
 		getCurrentMP: function () { return this.mp; },
 
 		getAttackPoint: function (attack) {
@@ -67,7 +63,6 @@
 			if (this.hp <= 0) {
 				return this.exp;
 			}
-			
 			return 0;
 		},
 
@@ -75,14 +70,12 @@
 			// hpが0になったら死亡
 			if (this.hp <= 0) {
 				this.remove();
-
 				for (var i = 0; i < this.dropItemList.length; ++i) {
 					if (Math.rand(0, this.dropItemList[i].random) === 0) {
 						return this.dropItemList[i].itemNum;
 					}
 				}
 			}
-
 			return null;
 		},
 

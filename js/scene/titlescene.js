@@ -16,7 +16,7 @@
 
         update : function() {
             if (ns.app.pointing.getPointingEnd()) {
-                ns.app.replaceScene(ns.OpeningScene());
+                ns.app.replaceScene(ns.MainScene());
             }
         }
     });
