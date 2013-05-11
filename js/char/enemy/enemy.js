@@ -6,7 +6,7 @@
 	ns.Enemy = tm.createClass({
 		superClass : ns.AnimationCharactor,
 
-		init: function (image, imageData, drawImageScaleSize) {
+		init: function (image, imageData, drawImageScaleSize, player) {
 			this.superInit(image, imageData, drawImageScaleSize);
 			// プレイヤーなので操作を受け付けるように設定
 			this.isInput = false;
@@ -36,6 +36,14 @@
 					random: 2
 				}
 			];
+
+			this.player = player;
+			this.lengthToPlayer = 0;
+			this.lengthToAttack = 0; // 攻撃を開始する距離
+			this.lengthToActive = 0; // プレイヤーを察知して近づき始める距離 
+			this.lengthToSense = 0;  // 察知して動き始める距離
+			this.modeActive = 0;     // 攻撃をし続けるモード(攻撃を受けたら切り替わる)
+			this.modeSafe   = 0;     // 攻撃をせずに行動するモード
 		},
 
 		getMaxHP:     function () { return this.maxhp; },
@@ -84,7 +92,25 @@
 		},
 
 		update: function (app) {
-			this.directAnimation(app);
+            // ランダム移動
+            if (this.isAuto) {
+                // フレームに合わせて移動する
+                if (app.frame % 10 === 0 && Math.rand(0, 10) === 0) {
+                    var angle = Math.rand(0, 359);
+                }
+                if (angle && this.isAnimation) {
+                    this.velocity.setDegree(angle, 1);
+                    this.velocity.x *= -1;
+                    this.speed = 4;
+                    // 移動方向に対して体を向けてアニメーションする
+                    this.directWatch(angle);
+                }
+                else {
+                    //this.paused = true;
+                }
+                // this.position.add(tm.geom.Vector2.mul(this.velocity, this.speed));
+                // console.log("x : " + this.x + " y : " + this.y);
+            }
 		}
 	});
 

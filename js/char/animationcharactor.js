@@ -157,28 +157,6 @@
             }
         },
 
-        // 移動方向に合わせて向きを変える
-        directAnimation: function (app) {
-            // ランダム移動
-            if (this.isAuto) {
-                // フレームに合わせて移動する
-                if (app.frame % 10 === 0 && Math.rand(0, 10) === 0) {
-                    var angle = Math.rand(0, 359);
-                }
-                if (angle && this.isAnimation) {
-                    this.velocity.setDegree(angle, 1);
-                    this.velocity.x *= -1;
-                    this.speed = 4;
-                    this.directWatch(angle);
-                }
-                else {
-                    //this.paused = true;
-                }
-                // this.position.add(tm.geom.Vector2.mul(this.velocity, this.speed));
-                // console.log("x : " + this.x + " y : " + this.y);
-            }
-        },
-
         // 指定方向以外の向きか調べる
         _exceptDirectWatch: function (angle) {
             if (this.currentAnimation) {

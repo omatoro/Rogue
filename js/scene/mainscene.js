@@ -79,7 +79,7 @@
             // 敵
             var enemyGroup = tm.app.CanvasElement();
             this.enemyGroup = enemyGroup;
-            ns.StageManager(ns.MainScene.STAGE_NUMBER, enemyGroup, map);
+            ns.StageManager(ns.MainScene.STAGE_NUMBER, enemyGroup, map, player);
 
 
             // 敵をマップに追加

@@ -4,7 +4,7 @@
 (function(ns) {
 
 	ns.StageManager = tm.createClass({
-		init: function (stageNum, enemyGroup, map) {
+		init: function (stageNum, enemyGroup, map, player) {
 			// 敵を生成して返す
 			var ENEMY_NUM = 80; // 敵の出現数
             for (var i = 0; i < ENEMY_NUM; ++i) {
