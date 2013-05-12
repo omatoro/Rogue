@@ -3,10 +3,12 @@
  */
 (function(ns) {
 
+	var ATTACK_LIMIT_COUNTER = 90;
+
 	ns.Enemy = tm.createClass({
 		superClass : ns.AnimationCharactor,
 
-		init: function (image, imageData, drawImageScaleSize, player) {
+		init: function (image, imageData, drawImageScaleSize, player, map) {
 			this.superInit(image, imageData, drawImageScaleSize);
 			// プレイヤーなので操作を受け付けるように設定
 			this.isInput = false;
@@ -37,13 +39,33 @@
 				}
 			];
 
-			this.player = player;
+			this.map = map;
+			this.player = player; // ダメージを与える際に使用
 			this.lengthToPlayer = 0;
-			this.lengthToAttack = 0; // 攻撃を開始する距離
-			this.lengthToActive = 0; // プレイヤーを察知して近づき始める距離 
-			this.lengthToSense = 0;  // 察知して動き始める距離
+			this.lengthToAttack = 50;  // 攻撃を開始する距離
+			this.lengthToActive = 150; // プレイヤーを察知して近づき始める距離 
+			this.lengthToSense = 300;  // 察知して動き始める距離
 			this.modeActive = 0;     // 攻撃をし続けるモード(攻撃を受けたら切り替わる)
 			this.modeSafe   = 0;     // 攻撃をせずに行動するモード
+			this.attackTime = 0;
+
+			// 攻撃時のアニメーション
+			var ss = tm.app.SpriteSheet({
+                image: "slash",
+                frame: {
+                    width:  65,
+                    height: 65,
+                    count: 8
+                },
+                animations: {
+                    "slash": [0, 8]
+                }
+            });
+			var slash = tm.app.AnimationSprite(120, 120, ss)
+            slash.position.set(0, 0);
+            this.slash = slash;
+            this.attackDistanse = 50;
+            this.addChild(slash);
 		},
 
 		getMaxHP:     function () { return this.maxhp; },
@@ -53,7 +75,9 @@
 
 		getAttackPoint: function (attack) {
 			// 攻撃力を計算
-			var attackpoint = (this._str + this._dex/5 + this._luk/3)|0;
+			var random = Math.rand(9, 11) / 10;
+			var attackpoint = ((this._str + this._dex/5 + this._luk/3) * random)|0;
+			return attackpoint;
 		},
 
 		damage: function (attack) {
@@ -67,7 +91,6 @@
 		},
 
 		getExp: function () {
-			// hpが0になったら死亡
 			if (this.hp <= 0) {
 				return this.exp;
 			}
@@ -94,24 +117,124 @@
 		update: function (app) {
             // ランダム移動
             if (this.isAuto) {
-                // フレームに合わせて移動する
-                if (app.frame % 10 === 0 && Math.rand(0, 10) === 0) {
-                    var angle = Math.rand(0, 359);
-                }
-                if (angle && this.isAnimation) {
-                    this.velocity.setDegree(angle, 1);
-                    this.velocity.x *= -1;
-                    this.speed = 4;
-                    // 移動方向に対して体を向けてアニメーションする
-                    this.directWatch(angle);
-                }
-                else {
-                    //this.paused = true;
-                }
-                // this.position.add(tm.geom.Vector2.mul(this.velocity, this.speed));
-                // console.log("x : " + this.x + " y : " + this.y);
+            	var mapEnemyPosition = this.position.clone();
+            	mapEnemyPosition = this.map.mapCenterToMapLeftTop(mapEnemyPosition.x, mapEnemyPosition.y);
+            	mapEnemyPosition.y += 35; // 位置を調整
+            	var lengthToPlayer = this.map.playerPosition.distance(mapEnemyPosition);
+            	if (lengthToPlayer <= this.lengthToAttack) {
+            		// 攻撃
+            		this._moveAttack();
+            		this._attack(app, mapEnemyPosition, this.map.playerPosition.clone());
+
+            		// 攻撃へのカウントアップ
+            		++this.attackTime;
+            	}
+            	else if (lengthToPlayer <= this.lengthToActive) {
+            		// playerに近づく
+            		this._moveActive(mapEnemyPosition, this.map.playerPosition.clone());
+
+            		// 攻撃へのカウントアップ
+            		++this.attackTime;
+            	}
+            	else if (lengthToPlayer <= this.lengthToSense) {
+            		// 動き始める
+            		this._moveSense(app);
+
+            		// 攻撃をキャンセル
+            		this.attackTime = 0;
+            	}
             }
-		}
+		},
+
+		_attack: function (app, enemyPosition, playerPosition) {
+			// 攻撃へのカウントアップが上限に達しているか
+			if (this.attackTime < ATTACK_LIMIT_COUNTER) {
+				return ;
+			}
+			else {
+				this.attackTime = ATTACK_LIMIT_COUNTER;
+			}
+
+            // 攻撃の方向を調べる
+            playerPosition.sub(enemyPosition);
+            var attackDirect = playerPosition.normalize();
+            
+            // 攻撃の場所を計算する(画面上)
+            var distanse = this.attackDistanse;
+            var attackScreenPosition = tm.geom.Vector2.mul(attackDirect, distanse);
+
+            // 攻撃時のアニメーション
+            this.slash.position.set(attackScreenPosition.x, attackScreenPosition.y);
+            this.slash.gotoAndPlay("slash");
+
+            // 攻撃するポイントを作成
+            var attackMapPosition = this.position.clone().add(attackScreenPosition);
+            attackMapPosition = this.map.mapCenterToMapLeftTop(attackMapPosition.x, attackMapPosition.y-20);
+            var attackElement = tm.app.Object2D();
+            attackElement.radius = 40;
+            attackElement.position.set(attackMapPosition.x, attackMapPosition.y);
+
+            // プレイヤーのポイントを作成
+            var hittedElement = tm.app.Object2D();
+            hittedElement.radius = 40;
+            hittedElement.position.set(this.map.playerPosition.x, this.map.playerPosition.y);
+
+            // 攻撃が当たっているか調べる
+            if (hittedElement.isHitElementCircle(attackElement)) {
+            	// 攻撃のカウントを初期化
+            	this.attackTime = 0;
+
+            	// ダメージ計算
+            	var attack = this.getAttackPoint();
+            	var damage = this.player.damage(attack);
+
+            	// ダメージを表示
+            	var damageEffect = ns.DamagedNumber(damage);
+
+            	// 表示場所を設定
+                var damagePosition = this.map.mapCenterToScreenTopLeft(hittedElement.x, hittedElement.y);
+                damageEffect.effectPositionSet(ns.SCREEN_WIDTH/2, ns.SCREEN_HEIGHT/2 + 10);
+                app.currentScene.addChild(damageEffect);
+            }
+		},
+
+		_moveAttack: function () {
+			this.velocity.x = 0;
+			this.velocity.y = 0;
+		},
+		_moveActive: function (enemyPosition, playerPosition) {
+			// プレイヤーに近づく
+			// プレイヤーへの距離
+			playerPosition.sub(enemyPosition);
+			// playerPosition.y *= -1;
+			this.velocity = playerPosition.normalize();
+			this.velocity.x *= -1;
+			this.velocity.y *= -1;
+			var angle = Math.radToDeg(this.velocity.toAngle());
+			angle -= 180;
+            if   (angle < 0) {angle *= -1;}
+            else             {angle = 360 - angle;}
+			this.directWatch(angle);
+		},
+		_moveSense: function (app) {
+			// 移動を開始するモードに変更する
+			// this.modeSafe = true;
+
+            // フレームに合わせて移動する
+            if (app.frame % 20 === 0) {
+                var angle = Math.rand(0, 359);
+            }
+            if (angle && this.isAnimation) {
+                this.velocity.setDegree(angle, 1);
+                this.velocity.x *= -1;
+                // this.speed = 4;
+                // 移動方向に対して体を向けてアニメーションする
+                this.directWatch(angle);
+            }
+            else {
+                //this.paused = true;
+            }
+		},
 	});
 
 })(game);

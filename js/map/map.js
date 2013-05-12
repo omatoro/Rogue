@@ -25,7 +25,8 @@
 
 		init: function (pad) {
 			// マップの自動生成
-			var map = ns.GenerateMap();
+            var mapSize = Math.rand(10, 60);
+			var map = ns.GenerateMap(mapSize, mapSize);
 
 			// マップデータの作成
 			var mapchip = ns.MapChip({
@@ -87,7 +88,7 @@
             stairsPosition = this.mapLeftTopToMapCenter(
                 stairsPosition.x * this.mapChipWidth + this.mapChipWidth/2,
                 stairsPosition.y * this.mapChipHeight);
-            stairs.position.set(stairsPosition.x, stairsPosition.y);
+            stairs.position.set(stairsPosition.x, stairsPosition.y + stairs.height/2);
             this.stairs = stairs;
 
             this.addChild(stairs);
@@ -151,7 +152,6 @@
         initMapPosition: function (initPosition) {
             // セットしたポジションの初期位置を保持
             this.initPosition = tm.geom.Vector2(initPosition.x, initPosition.y);
-
             // ポジションのセット
             this.position.set(initPosition.x, initPosition.y);
         },
@@ -209,23 +209,20 @@
             if (angle !== null) {
                 this.velocity.setDegree(angle, 1);
                 this.velocity.x *= -1;
-                // this.velocity.y *= -1;
                 this.speed = 6;
             }
             else if (this.pad && this.pad.isTouching) {
-                if   (this.pad.angle < 0) {this.pad.angle *= -1;}
-                else                      {this.pad.angle = 360 - this.pad.angle;}
-                this.velocity.setDegree(this.pad.angle, 1);
+                var padAngle = this.pad.angle;
+                if   (padAngle < 0) {padAngle *= -1;}
+                else                {padAngle = 360 - padAngle;}
+                this.velocity.setDegree(padAngle, 1);
                 this.velocity.x *= -1;
-                this.velocity.y *= -1;
                 this.speed = 6;
             }
-
             // プレイヤーの移動
             if (this.isPlayer) {
                 this.velocity = this._playerMove();
             }
-
             // 敵の移動
             if (this.isEnemy) {
                 this._enemyMove();
@@ -282,6 +279,7 @@
             return playerVelocity.clone();
         },
 
+        // マップとのヒット判定
         _isHitCollisionMap: function (x, y, velocity, speed) {
             // 返す値
             var result = 0x00;
@@ -313,6 +311,7 @@
             return result;
         },
 
+        // プレイヤーと宝箱とのヒット判定
         _isHitTreasureBox: function (app) {
             if (this.isPlayer) {
                 var items = this.itemGroup.children;
@@ -337,6 +336,7 @@
             }
         },
 
+        // プレイヤーと階段とのヒット判定
         _isHitStairs: function (app) {
             if (this.isPlayer) {
                 var playerPosition = this.mapLeftTopToMapCenter(this.playerPosition.x, this.playerPosition.y);

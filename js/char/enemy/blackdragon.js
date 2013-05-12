@@ -6,12 +6,12 @@
 	ns.BlackDragon = tm.createClass({
 		superClass : ns.Enemy,
 
-		init: function () {
+		init: function (player) {
 			this.superInit("enemy1", {
 				width:  180/6,
 				height: 112/4,
 				count:  24,
-			}, 3);
+			}, 3, player);
 
 			this.maxhp = 5;
 			this.hp    = 5;

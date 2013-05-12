@@ -6,12 +6,12 @@
 	ns.Player = tm.createClass({
 		superClass : ns.AnimationCharactor,
 
-		init: function (pad) {
+		init: function () {
 			this.name = "player";
 			this.superInit("player");
 			// プレイヤーなので操作を受け付けるように設定
-			this.setInputPad(pad);
 			this.isInput = true;
+			this._isGameOver = false;
 
 			// ダメージ= [[[最終ATK * スキル倍率 ] * (4000 + 除算Def) / (4000 + 除算DEF * 10)] * 種族耐性] - 減算DEF
 
@@ -52,6 +52,7 @@
 		getDEX: function () { return this._dex; },
 		getEXP: function () { return this.exp; },
 		getNextLevel: function () { return this.nextLevelExp; },
+		isGameOver: function () { return this._isGameOver; },
 
 		levelUp: function () {
 			// パラメータ上昇
@@ -144,6 +145,9 @@
 			this.hp = (this.hp < 0) ? 0 : this.hp;
 
 			// hpが0になったら死亡
+			if (this.hp <= 0) {
+				this._isGameOver = true;
+			}
 
 			return damage;
 		},

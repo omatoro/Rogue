@@ -6,19 +6,19 @@
 	ns.RedBat = tm.createClass({
 		superClass : ns.Enemy,
 
-		init: function () {
+		init: function (player, map) {
 			this.superInit("RedBat", {
 				width:  180/6,
 				height: 112/4,
 				count:  24,
-			}, 3);
+			}, 3, player, map);
 
 			this.maxhp = 5;
 			this.hp    = 5;
 			this.maxmp = 0;
 			this.mp    = 0;
 
-			this._str  = 1; // 攻撃力
+			this._str  = 3; // 攻撃力
 			this._def  = 0; // 防御力
 			// this._int = 1; // 魔力
 			this._agi  = 0; // 素早さ
@@ -28,7 +28,7 @@
 
 			this.exp = 500; // 倒した時の経験値
 
-			this.speed = 4;
+			this.speed = 1;
 			this.velocity = tm.geom.Vector2(0, 0);
 
 			this.dropItemList = [

@@ -3,10 +3,6 @@
  */
 (function(ns) {
 
-    var MAP_WIDTH  = 50; // 配列数なので注意
-    var MAP_HEIGHT = 40;
-
-
     var ROOM_SIZE_MIN = 4;
     var MARGIN_BETWEEN_RECT_ROOM = 2;
     var RECT_NUM_MIN = ROOM_SIZE_MIN + (MARGIN_BETWEEN_RECT_ROOM * 2); // 区画の最小構成数
@@ -16,12 +12,13 @@
 
     ns.GenerateMap = tm.createClass({
 
-        init: function () {
+        // 引数は配列の数(マップチップの数)なので注意
+        init: function (mapChipWidthNum, mapChipHeightNum) {
             // 生成する配列の初期化
             var map = [];
-            for (var i = 0; i < MAP_HEIGHT; ++i) {
+            for (var i = 0; i < mapChipHeightNum; ++i) {
                 map[i] = [];
-                for (var j = 0; j < MAP_WIDTH; ++j) {
+                for (var j = 0; j < mapChipWidthNum; ++j) {
                     map[i].push(false);
                 }
             }
@@ -37,7 +34,7 @@
             this.coupleList = [];
 
             // 分割を開始
-            this.divideRect(this.addRect(0, 0, MAP_WIDTH - 1, MAP_HEIGHT - 1));
+            this.divideRect(this.addRect(0, 0, mapChipWidthNum - 1, mapChipHeightNum - 1));
 
             // 部屋を作成
             this.makeRoom();
@@ -122,7 +119,6 @@
 
             this.collision = collision;
             this.walkMapNum = possibleWalkMapNum; // 歩ける場所の数
-            console.dir(collision);
         },
 
         _line: function (x0, y0, x1, y1) {

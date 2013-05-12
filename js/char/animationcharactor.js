@@ -112,6 +112,7 @@
         // 入力でパッドも使うならセットする
         setInputPad: function (pad) {
             this.pad = pad || false;
+            console.log(pad);
         },
 
         // 向いている方向を決める
@@ -142,13 +143,15 @@
                 }
                 // タッチパネルによる速度設定
                 else if (this.pad && this.pad.isTouching) {
-                    if   (this.pad.angle < 0) {this.pad.angle *= -1;}
-                    else                      {this.pad.angle = 360 - this.pad.angle;}
-                    this.velocity.setDegree(this.pad.angle, 1);
+
+                    var padAngle = this.pad.angle;
+                    if   (padAngle < 0) {padAngle *= -1;}
+                    else                {padAngle = 360 - padAngle;}
+                    this.velocity.setDegree(padAngle, 1);
                     this.velocity.y *= -1;
                     this.speed = 30;
-                    this.directWatch(this.pad.angle);
-                    this.angle = this.pad.angle;
+                    this.directWatch(padAngle);
+                    this.angle = padAngle;
                 }
                 else {
                     this.paused = true;

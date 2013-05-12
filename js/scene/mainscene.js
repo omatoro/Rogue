@@ -8,33 +8,43 @@
         LABELS: {
             children: [{
                 type: "Label",
-                name: "statusLevel",
-                x: 40,
+                name: "stairsNum",
+                x: 100,
                 y: 80,
                 width: ns.SCREEN_WIDTH,
                 fillStyle: "white",
                 text: " ",
-                fontSize: 35,
+                fontSize: 25,
+                align: "right"
+            },{
+                type: "Label",
+                name: "statusLevel",
+                x: 130,
+                y: 80,
+                width: ns.SCREEN_WIDTH,
+                fillStyle: "white",
+                text: " ",
+                fontSize: 25,
                 align: "left"
             },{
                 type: "Label",
                 name: "statusHP",
-                x: 160,
+                x: 230,
                 y: 80,
                 width: ns.SCREEN_WIDTH,
                 fillStyle: "white",
                 text: " ",
-                fontSize: 35,
+                fontSize: 25,
                 align: "left"
             },{
                 type: "Label",
                 name: "statusMP",
-                x: 380,
+                x: 430,
                 y: 80,
                 width: ns.SCREEN_WIDTH,
                 fillStyle: "white",
                 text: " ",
-                fontSize: 35,
+                fontSize: 25,
                 align: "left"
             }]
         }
@@ -43,16 +53,18 @@
     ns.MainScene = tm.createClass({
         superClass : tm.app.Scene,
 
-        init : function(continuePlayer) {
+        init : function(continuePlayer, continuePad) {
             this.superInit();
 
             // コントローラーパッド
-            var pad = tm.controller.Pad();
+            var pad = continuePad || tm.controller.Pad();
+            this.pad = pad;
             pad.position.set(80, ns.SCREEN_HEIGHT - 80);
 
             // プレイヤー
             var player = continuePlayer || ns.Player(pad);
             this.player = player;
+            player.setInputPad(pad);
             player.position.set(ns.SCREEN_WIDTH/2, ns.SCREEN_HEIGHT/2);
 
             // マップ
@@ -79,7 +91,7 @@
             // 敵
             var enemyGroup = tm.app.CanvasElement();
             this.enemyGroup = enemyGroup;
-            ns.StageManager(ns.MainScene.STAGE_NUMBER, enemyGroup, map, player);
+            ns.StageManager(ns.MainScene.STAGE_NUMBER, enemyGroup, player, map);
 
 
             // 敵をマップに追加
@@ -187,6 +199,7 @@
         },
 
         drawStatus: function () {
+            this.stairsNum.text   = ns.MainScene.STAGE_NUMBER + "階";
             this.statusLevel.text = "Lv." + this.player.getLevel();
             this.statusHP.text    = "HP " + this.player.getCurrentHP() + "/" + this.player.getMaxHP();
             this.statusMP.text    = "MP " + this.player.getCurrentMP() + "/" + this.player.getMaxMP();
@@ -199,8 +212,12 @@
             // 次のステージに進むフラグがたったらマップ更新
             if (this.map.isNextStage()) {
                 ++ns.MainScene.STAGE_NUMBER;
-                console.log(ns.MainScene.STAGE_NUMBER);
-                app.replaceScene(ns.MainScene(this.player, this.itemGroup));
+                app.replaceScene(ns.MainScene(this.player, this.pad));
+            }
+
+            // ゲームオーバーフラグがたったらゲーム終了
+            if (this.player.isGameOver()) {
+                app.replaceScene(ns.EndScene(ns.MainScene.STAGE_NUMBER, this.player.getLevel()));
             }
         }
     });

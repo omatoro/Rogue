@@ -257,8 +257,6 @@
             // ステータス表示
             this.fromJSON(UI_DATA.LABELS);
             this._drawStatus();
-
-            console.dir(this.player.getItem());
         },
 
         _drawStatus: function () {
