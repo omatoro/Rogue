@@ -9,7 +9,6 @@ tm.preload(function() {
 	tm.graphics.TextureManager.add("player", 		"rsc/player.png");
 	tm.graphics.TextureManager.add("playerFace", 	"rsc/char.png");
 
-
 	// モンスター
 	tm.graphics.TextureManager.add("SlimeGreen",		"rsc/[Monster]Slime_Green.png");
 	tm.graphics.TextureManager.add("SlimeBlue",			"rsc/[Monster]Slime_Blue.png");
