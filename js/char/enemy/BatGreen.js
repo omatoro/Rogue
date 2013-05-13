@@ -1,14 +1,14 @@
 /**
- * GargoyleBlack
+ * BatGreen
  */
 (function(ns) {
 
-	ns.GargoyleBlack = tm.createClass({
+	ns.BatGreen = tm.createClass({
 		superClass : ns.Enemy,
 
 		init: function (player, map) {
-			this.superInit("GargoyleBlack", {
-				width:  240/6,
+			this.superInit("BatGreen", {
+				width:  180/6,
 				height: 112/4,
 				count:  24,
 			}, 3, player, map);

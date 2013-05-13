@@ -91,7 +91,7 @@
             // 敵
             var enemyGroup = tm.app.CanvasElement();
             this.enemyGroup = enemyGroup;
-            ns.StageManager(ns.MainScene.STAGE_NUMBER, enemyGroup, player, map);
+            this.stage = ns.StageManager(ns.MainScene.STAGE_NUMBER, enemyGroup, player, map);
 
 
             // 敵をマップに追加
@@ -217,7 +217,12 @@
 
             // ゲームオーバーフラグがたったらゲーム終了
             if (this.player.isGameOver()) {
-                app.replaceScene(ns.EndScene(ns.MainScene.STAGE_NUMBER, this.player.getLevel()));
+                app.replaceScene(ns.EndScene(ns.MainScene.STAGE_NUMBER, this.player.getLevel(), false));
+            }
+
+            // ゲームクリアフラグがたったらゲーム終了
+            if (this.stage.isGameClear()) {
+                app.replaceScene(ns.EndScene(ns.MainScene.STAGE_NUMBER, this.player.getLevel(), true));
             }
         }
     });

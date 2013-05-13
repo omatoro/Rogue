@@ -1,15 +1,15 @@
 /**
- * GargoyleBlack
+ * ZombieNormal
  */
 (function(ns) {
 
-	ns.GargoyleBlack = tm.createClass({
+	ns.ZombieNormal = tm.createClass({
 		superClass : ns.Enemy,
 
 		init: function (player, map) {
-			this.superInit("GargoyleBlack", {
-				width:  240/6,
-				height: 112/4,
+			this.superInit("ZombieNormal", {
+				width:  96/6,
+				height: 80/4,
 				count:  24,
 			}, 3, player, map);
 

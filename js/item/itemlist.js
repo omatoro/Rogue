@@ -105,18 +105,10 @@
 	};
 
 	ns.ItemList = tm.createClass({
-		superClass : ns.AnimationCharactor,
+		superClass : tm.app.CanvasElement,
 
 		init: function () {
-			this.superInit("enemy1", {
-				width:  180/6,
-				height: 112/4,
-				count:  24,
-			}, 3);
-
-			this.speed = 4;
-			this.velocity = tm.geom.Vector2(0, 0);
-
+			this.superInit();
 			// アイテムデータ
 			this.fromJSON(ITEM_LIST);
 		},
@@ -126,10 +118,6 @@
 				return this.item[item];
 			}
 			return null;
-		},
-
-		update: function (app) {
-			this.directAnimation(app);
 		}
 	});
 

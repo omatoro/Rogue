@@ -3,18 +3,6 @@
  */
 (function(ns) {
 
-    var UI_DATA = {
-        LABELS : {
-            children : [
-                {
-                    type : "Label" , name : "scoreLabel",
-                    x : 450, y : 215, width : 400, fillStyle : "white",
-                    text : "dammy", fontSize : 48, align : "end"
-                }
-            ]
-        }
-    };
-
     var RESULT_PARAM = {
             score: 256,
             msg:      "【Rogue】",
@@ -29,15 +17,16 @@
 
         superClass : tm.app.ResultScene,
 
-        // 表示するスコア
-        score : 0,
-
         // タイトル移動へのボタン
         title_button : {},
 
-        init : function(stairsNum, playerLevel) {
-            // スコア初期化
-            RESULT_PARAM.score = stairsNum + "階まで到達しました";
+        init : function(stairsNum, playerLevel, isClear) {
+            if (isClear) {
+                RESULT_PARAM.score = "全" + stairsNum + "階制覇しました";
+            }
+            else {
+                RESULT_PARAM.score = stairsNum + "階で死亡しました";
+            }
             this.superInit(RESULT_PARAM);
 
             // this.gameData = {

@@ -1,15 +1,15 @@
 /**
- * GargoyleBlack
+ * SlimeGreen
  */
 (function(ns) {
 
-	ns.GargoyleBlack = tm.createClass({
+	ns.SlimeGreen = tm.createClass({
 		superClass : ns.Enemy,
 
 		init: function (player, map) {
-			this.superInit("GargoyleBlack", {
-				width:  240/6,
-				height: 112/4,
+			this.superInit("SlimeGreen", {
+				width:  96/6,
+				height: 80/4,
 				count:  24,
 			}, 3, player, map);
 
@@ -26,7 +26,7 @@
 			this._vit  = 0; // 体力
 			this._dex  = 0; // 器用さ
 
-			this.exp = 500; // 倒した時の経験値
+			this.exp = 1; // 倒した時の経験値
 
 			this.speed = 1;
 			this.velocity = tm.geom.Vector2(0, 0);

@@ -1,15 +1,15 @@
 /**
- * GargoyleBlack
+ * DragonRed
  */
 (function(ns) {
 
-	ns.GargoyleBlack = tm.createClass({
+	ns.DragonRed = tm.createClass({
 		superClass : ns.Enemy,
 
 		init: function (player, map) {
-			this.superInit("GargoyleBlack", {
-				width:  240/6,
-				height: 112/4,
+			this.superInit("DragonRed", {
+				width:  228/6,
+				height: 120/4,
 				count:  24,
 			}, 3, player, map);
 
