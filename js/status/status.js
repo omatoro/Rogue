@@ -247,6 +247,39 @@
                 e.app.pushScene(ns.iPhonePicker(this, pickerData));
             });
 
+
+            // アイテム使用ボタン押下時の動作
+            this.medicineButton.addEventListener("pointingend", function(e) {
+                // メニューボタンが押されたらプルダウンを行う
+                // 表示するデータを作成
+                var pickerData = [{
+                    text: "使用アイテムを選択",
+                    subData: {
+                        dropImage: null,
+                        name: "使用アイテムを選択",
+                        status: {
+                            str: 0,
+                            def: 0,
+                            agi: 0,
+                            luk: 0,
+                            vit: 0,
+                            dex: 0
+                        }
+                    }
+                }];
+                for (var i = 0; i < parent.player.getItem().length; ++i) {
+                    var itemType = parent.player.getItem()[i].type;
+                    if (itemType === "medicine") {
+                        var pushData = {
+                            text:    parent.player.getItem()[i].name,
+                            subData: parent.player.getItem()[i]
+                        }
+                        pickerData.push(pushData);
+                    }
+                }
+                e.app.pushScene(ns.iPhonePicker(this, pickerData));
+            });
+
             // 画面に追加
             parent.addChild(this);
             parent.addChild(endButton);
@@ -295,6 +328,12 @@
                 this.player.equipArmor(this.armorButton.returnedData);
                 this._drawStatus();
                 this.armorButton.returnedData = null;
+            }
+            // 食事
+            if (this.medicineButton.returnedData) {
+                this.player.eatMedicine(this.medicineButton.returnedData);
+                this._drawStatus();
+                this.medicineButton.returnedData = null;
             }
         },
     });

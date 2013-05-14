@@ -34,7 +34,7 @@
 
 			this.dropItemList = [
 				{
-					itemNum: 0,
+					itemName: "ナイフ",
 					random: 2
 				}
 			];
@@ -103,7 +103,7 @@
 				this.remove();
 				for (var i = 0; i < this.dropItemList.length; ++i) {
 					if (Math.rand(0, this.dropItemList[i].random) === 0) {
-						return this.dropItemList[i].itemNum;
+						return this.dropItemList[i].itemName;
 					}
 				}
 			}

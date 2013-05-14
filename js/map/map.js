@@ -25,7 +25,7 @@
 
 		init: function (pad) {
 			// マップの自動生成
-            var mapSize = Math.rand(25, 60);
+            var mapSize = Math.rand(20, 31);
 			var map = ns.GenerateMap(mapSize, mapSize);
 
 			// マップデータの作成

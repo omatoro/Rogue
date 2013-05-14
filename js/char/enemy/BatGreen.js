@@ -33,8 +33,8 @@
 
 			this.dropItemList = [
 				{
-					itemNum: 1,
-					random: 2
+					itemName: "シャムシール",
+					random: 4
 				}
 			];
 		}

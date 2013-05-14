@@ -9,12 +9,12 @@
 			{
 				name: "ダガー",
 				type: "shortsword",
-				summary: "諸刃の短刀。",
+				summary: "両刃の短刀。",
 				dropImage: "dropWeapon",
 				status: {
 					str: 2,
 					def: 0,
-					agi: 0,
+					agi: 1,
 					luk: 0,
 					vit: 0,
 					dex: 0
@@ -27,7 +27,7 @@
 				status: {
 					str: 1,
 					def: 0,
-					agi: 0,
+					agi: 2,
 					luk: 0,
 					vit: 0,
 					dex: 0
@@ -38,9 +38,22 @@
 				summary: "刀身が湾曲しており、刀身の幅が広い。",
 				dropImage: "dropWeapon",
 				status: {
-					str: 1,
+					str: 5,
 					def: 0,
-					agi: 1,
+					agi: 3,
+					luk: 0,
+					vit: 0,
+					dex: 0
+				}
+			},{
+				name: "パリングダガー",
+				type: "shortsword",
+				summary: "受け流し用の短剣",
+				dropImage: "dropWeapon",
+				status: {
+					str: 3,
+					def: 2,
+					agi: 2,
 					luk: 0,
 					vit: 0,
 					dex: 0
@@ -48,6 +61,72 @@
 			},
 
 			// 長剣
+			{
+				name: "サーベル",
+				type: "longsword",
+				summary: "金属を打っただけの直刀。",
+				dropImage: "dropWeapon",
+				status: {
+					str: 2,
+					def: 0,
+					agi: 0,
+					luk: 0,
+					vit: 0,
+					dex: 0
+				}
+			},{
+				name: "カッター",
+				type: "longsword",
+				summary: "片刃の直刀。",
+				dropImage: "dropWeapon",
+				status: {
+					str: 4,
+					def: 0,
+					agi: 0,
+					luk: 0,
+					vit: 0,
+					dex: 0
+				}
+			},{
+				name: "レイピア",
+				type: "longsword",
+				summary: "刺突用の剣。",
+				dropImage: "dropWeapon",
+				status: {
+					str: 4,
+					def: 0,
+					agi: 2,
+					luk: 0,
+					vit: 0,
+					dex: 0
+				}
+			},{
+				name: "シャムシール",
+				type: "longsword",
+				summary: "曲刀。別名、三日月刀。",
+				dropImage: "dropWeapon",
+				status: {
+					str: 6,
+					def: 0,
+					agi: 0,
+					luk: 0,
+					vit: 0,
+					dex: 0
+				}
+			},{
+				name: "刀",
+				type: "longsword",
+				summary: "東洋の曲刀。",
+				dropImage: "dropWeapon",
+				status: {
+					str: 12,
+					def: 0,
+					agi: 0,
+					luk: 0,
+					vit: 0,
+					dex: 0
+				}
+			},
 			// 大剣two hand sword
 			// 槍
 			// 戦斧
@@ -99,8 +178,65 @@
 					vit: 0,
 					dex: 0
 				}
+			},{
+				name: "ドラゴンの鱗鎧(緑)",
+				type: "lightarmor",
+				summary: "動物の革を縫い込んだ軽鎧。",
+				dropImage: "dropWeapon",
+				status: {
+					str: 1,
+					def: 8,
+					agi: 0,
+					luk: 0,
+					vit: 0,
+					dex: 0
+				}
 			},
 			// 重鎧 heavyarmor
+
+
+			// 使用アイテム
+			{
+				name: "雑草",
+				type: "medicine",
+				summary: "食べられそうな草。",
+				dropImage: "dropWeapon",
+				status: {
+					hp: 2
+				}
+			},{
+				name: "薬草",
+				type: "medicine",
+				summary: "滋養強壮に。",
+				dropImage: "dropWeapon",
+				status: {
+					hp: 4
+				}
+			},{
+				name: "肉",
+				type: "medicine",
+				summary: "謎肉。",
+				dropImage: "dropWeapon",
+				status: {
+					hp: 5
+				}
+			},{
+				name: "モンスターの液体",
+				type: "medicine",
+				summary: "不思議な色をしている。",
+				dropImage: "dropWeapon",
+				status: {
+					hp: 3
+				}
+			},{
+				name: "ポーション",
+				type: "medicine",
+				summary: "薬草を調合した飲み物。",
+				dropImage: "dropWeapon",
+				status: {
+					hp: 10
+				}
+			},
 		]
 	};
 
@@ -115,7 +251,11 @@
 
 		get: function (item) {
 			if (item !== null) {
-				return this.item[item];
+				for (var i = 0; i < this.item.length; ++i) {
+					if (this.item[i].name === item) {
+						return this.item[i];
+					}
+				}
 			}
 			return null;
 		}
