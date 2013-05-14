@@ -77,6 +77,7 @@
         // 以下onnextsceneイベントが実行される
         onnextscene : function () {
             ns.app.replaceScene(ns.MainScene());
+            ns.MainScene.STAGE_NUMBER = 1;
         },
     });
 

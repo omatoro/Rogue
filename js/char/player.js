@@ -31,7 +31,7 @@
 			this._dex = 1; // 器用さ
 
 			this.exp = 0; // 取得経験値
-			this.nextLevelExp = 3;
+			this.nextLevelExp = 8;
 
 			this.item = [];
 
@@ -39,20 +39,20 @@
 			this.equipedArmor  = null;
 		},
 
-		getLevel: function () { return this.level; },
-		getMaxHP: function () { return this.maxhp; },
-		getCurrentHP: function () { return this.hp; },
-		getMaxMP: function () { return this.maxmp; },
-		getCurrentMP: function () { return this.mp; },
-		getSTR: function () { return this._str; },
-		getDEF: function () { return this._def; },
-		getAGI: function () { return this._agi; },
-		getLUK: function () { return this._luk; },
-		getVIT: function () { return this._vit; },
-		getDEX: function () { return this._dex; },
-		getEXP: function () { return this.exp; },
-		getNextLevel: function () { return this.nextLevelExp; },
-		isGameOver: function () { return this._isGameOver; },
+		getLevel: function ()		{ return this.level; },
+		getMaxHP: function ()		{ return this.maxhp; },
+		getCurrentHP: function ()	{ return this.hp; },
+		getMaxMP: function ()		{ return this.maxmp; },
+		getCurrentMP: function ()	{ return this.mp; },
+		getSTR: function ()			{ return this._str; },
+		getDEF: function ()			{ return this._def; },
+		getAGI: function ()			{ return this._agi; },
+		getLUK: function ()			{ return this._luk; },
+		getVIT: function ()			{ return this._vit; },
+		getDEX: function ()			{ return this._dex; },
+		getEXP: function ()			{ return this.exp; },
+		getNextLevel: function ()	{ return this.nextLevelExp; },
+		isGameOver: function ()		{ return this._isGameOver; },
 
 		levelUp: function () {
 			// パラメータ上昇
@@ -65,13 +65,17 @@
 			this._luk  += Math.rand(0, 2); // 運
 			this._vit  += Math.rand(0, 2); // 体力
 			this._dex  += Math.rand(0, 2); // 器用さ
+
+			// HP全回復
+			this.hp = this.maxhp;
+			this.mp = this.maxmp;
 		},
 
 		addExp: function (exp) {
 			this.exp += exp;
 			if (this.exp >= this.nextLevelExp) {
 				++this.level;
-				this.nextLevelExp = Math.ceil(this.nextLevelExp * 1.8);
+				this.nextLevelExp = Math.ceil(this.nextLevelExp * 2);
 				this.levelUp();
 				this.addExp(0);
 			}
