@@ -18,7 +18,7 @@
 			this.maxmp = 0;
 			this.mp    = 0;
 
-			this._str  = 17; // 攻撃力
+			this._str  = 24; // 攻撃力
 			this._def  = 18; // 防御力
 			// this._int = 1; // 魔力
 			this._agi  = 0; // 素早さ
@@ -33,8 +33,8 @@
 
 			this.dropItemList = [
 				{
-					itemName: "シャムシール",
-					random: 4
+					itemName: "刀",
+					random: 8
 				}
 			];
 		}

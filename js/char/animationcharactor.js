@@ -107,6 +107,9 @@
 
             // 向いている方向を保持
             this.angle = 270;
+
+            // 歩くスピード
+            this.speed = 6;
         },
 
         // 入力でパッドも使うならセットする
@@ -137,7 +140,6 @@
                 if (angle !== null && this.isAnimation) {
                     this.velocity.setDegree(angle, 1);
                     this.velocity.y *= -1;
-                    this.speed = 30;
                     this.directWatch(angle);
                     this.angle = angle;
                 }
@@ -149,7 +151,6 @@
                     else                {padAngle = 360 - padAngle;}
                     this.velocity.setDegree(padAngle, 1);
                     this.velocity.y *= -1;
-                    this.speed = 30;
                     this.directWatch(padAngle);
                     this.angle = padAngle;
                 }

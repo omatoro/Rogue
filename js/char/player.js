@@ -30,6 +30,8 @@
 			this._vit = 1; // 体力
 			this._dex = 1; // 器用さ
 
+			this.speed = 6;
+
 			this.exp = 0; // 取得経験値
 			this.nextLevelExp = 8;
 
@@ -54,32 +56,43 @@
 		getNextLevel: function ()	{ return this.nextLevelExp; },
 		isGameOver: function ()		{ return this._isGameOver; },
 
+		getSpeed: function () {
+			var agi = 0;
+			if (this.equipedWeapon !== null) {
+				agi += this.equipedWeapon.status.agi;
+			}
+			if (this.equipedArmor !== null) {
+				agi += this.equipedArmor.status.agi;
+			}
+
+			// agiがマイナス値だと極端に減らす
+			var speed = 0;
+			if (agi < 0) {
+				speed += this.speed + (agi*2) + (this.agi/2 |0);
+			}
+			else {
+				speed += this.speed + ((this.agi+agi)/2 |0);
+			}
+
+			return speed;
+		},
+
+		getDistanse: function () {
+			if (this.equipedWeapon !== null) {
+				return this.equipedWeapon.status.dis;
+			}
+			return 0;
+		},
+
 		eatMedicine: function (item) {
 			if (!item.status) {
 				return ;
 			}
 			this.hp += item.status.hp || 0;
+			tm.sound.WebAudioManager.get("eat").play();
 			if (this.hp > this.maxhp) {
 				this.hp = this.maxhp;
 			}
-		},
-		getMedicine: function () {
-			if (this.equipedWeapon === null) {
-				var result = {
-					dropImage: null,
-					name: "装備無し",
-					status: {
-						str: 0,
-						def: 0,
-						agi: 0,
-						luk: 0,
-						vit: 0,
-						dex: 0
-					}
-				};
-				return result;
-			}
-			return this.equipedWeapon;
 		},
 
 		levelUp: function () {
@@ -89,7 +102,7 @@
 			this._str  += Math.rand(0, 2); // 攻撃力
 			this._def  += Math.rand(0, 2); // 防御力
 			// this._int = 40; // 魔力
-			this._agi  += Math.rand(0, 2); // 素早さ
+			this._agi  += (Math.rand(0, 3) === 0) ? 1 : 0; // 素早さ
 			this._luk  += Math.rand(0, 2); // 運
 			this._vit  += Math.rand(0, 2); // 体力
 			this._dex  += Math.rand(0, 2); // 器用さ
@@ -97,13 +110,16 @@
 			// HP全回復
 			this.hp = this.maxhp;
 			this.mp = this.maxmp;
+
+			// 音
+			tm.sound.WebAudioManager.get("levelup").play();
 		},
 
 		addExp: function (exp) {
 			this.exp += exp;
 			if (this.exp >= this.nextLevelExp) {
 				++this.level;
-				this.nextLevelExp = Math.ceil(this.nextLevelExp * 2);
+				this.nextLevelExp = Math.ceil(this.nextLevelExp * 1.8);
 				this.levelUp();
 				this.addExp(0);
 			}
@@ -122,7 +138,13 @@
 		},
 
 		equipWeapon: function (item) {
-			this.equipedWeapon = item || null;
+			if (item) {
+				this.equipedWeapon = item;
+				tm.sound.WebAudioManager.get("equip").play();
+			}
+			else {
+				this.equipedWeapon = null;
+			}
 		},
 		getWeapon: function () {
 			if (this.equipedWeapon === null) {
@@ -130,6 +152,7 @@
 					dropImage: null,
 					name: "装備無し",
 					status: {
+						dis: 0,
 						str: 0,
 						def: 0,
 						agi: 0,
@@ -144,7 +167,13 @@
 		},
 
 		equipArmor: function (item) {
-			this.equipedArmor = item || null;
+			if (item) {
+				this.equipedArmor = item;
+				tm.sound.WebAudioManager.get("equip").play();
+			}
+			else {
+				this.equipedArmor = null;
+			}
 		},
 		getArmor: function () {
 			if (this.equipedArmor === null) {
@@ -183,12 +212,14 @@
 			// hpが0になったら死亡
 			if (this.hp <= 0) {
 				this._isGameOver = true;
+				tm.sound.WebAudioManager.get("playerdown").play();
 			}
 
 			return damage;
 		},
 
 		attack: function () {
+			tm.sound.WebAudioManager.get("enemydamage").play();
 			return this.angle;
 		},
 

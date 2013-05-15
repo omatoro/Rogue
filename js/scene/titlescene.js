@@ -8,7 +8,7 @@
 
         init : function() {
             this.superInit({
-                title :  "WEBack",
+                title :  "RogueLike",
                 width :  ns.SCREEN_WIDTH,
                 height : ns.SCREEN_HEIGHT
             });

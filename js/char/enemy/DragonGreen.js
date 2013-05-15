@@ -33,11 +33,11 @@
 
 			this.dropItemList = [
 				{
-					itemName: "刀",
-					random: 8
+					itemName: "ドラゴンの爪(緑)",
+					random: 12
 				},{
 					itemName: "ドラゴンの鱗鎧(緑)",
-					random: 15
+					random: 6
 				}
 			];
 		}

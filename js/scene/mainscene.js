@@ -1,5 +1,5 @@
 /**
- * オープニング画面
+ * MainScene
  */
 (function(ns) {
 
@@ -123,7 +123,7 @@
                 var attackVelocity = tm.geom.Vector2(0,0).setDegree(attackAngle, 1);
                 attackVelocity.y *= -1;
                 // 攻撃の場所を計算する()画面上
-                var distanse = 100;
+                var distanse = 50 + (player.getDistanse() * 20);
                 var attackScreenPosition = player.position.clone().add(tm.geom.Vector2.mul(attackVelocity, distanse));
 
                 // 攻撃時のアニメーション
@@ -174,6 +174,7 @@
             statusButton.position.set(ns.SCREEN_WIDTH/2, ns.SCREEN_HEIGHT-30-50);
             this.statusButton = statusButton;
             statusButton.addEventListener("pointingend", function(e) {
+                tm.sound.WebAudioManager.get("openstatus").play();
                 e.app.pushScene(ns.StatusScene(player));
             });
 
@@ -184,6 +185,9 @@
             this.addChild(slash);
             this.addChild(attackButton);
             this.addChild(statusButton);
+
+            // サウンド：BGM
+            this.bgm = tm.sound.WebAudioManager.get("dungeon").setLoop(true).play();
 
             // ステータス表示
             this.fromJSON(UI_DATA.LABELS);
@@ -212,16 +216,21 @@
             // 次のステージに進むフラグがたったらマップ更新
             if (this.map.isNextStage()) {
                 ++ns.MainScene.STAGE_NUMBER;
+                this.bgm.stop();
+                tm.sound.WebAudioManager.get("downStairs").play();
                 app.replaceScene(ns.MainScene(this.player, this.pad));
             }
 
             // ゲームオーバーフラグがたったらゲーム終了
             if (this.player.isGameOver()) {
+                this.bgm.stop();
                 app.replaceScene(ns.EndScene(ns.MainScene.STAGE_NUMBER, this.player.getLevel(), false));
             }
 
             // ゲームクリアフラグがたったらゲーム終了
             if (this.stage.isGameClear()) {
+                this.bgm.stop();
+                tm.sound.WebAudioManager.get("levelup").play();
                 app.replaceScene(ns.EndScene(ns.MainScene.STAGE_NUMBER, this.player.getLevel(), true));
             }
         }

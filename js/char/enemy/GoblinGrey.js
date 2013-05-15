@@ -13,13 +13,13 @@
 				count:  24,
 			}, 3, player, map);
 
-			this.maxhp = 32;
+			this.maxhp = 20;
 			this.hp    = 32;
 			this.maxmp = 0;
 			this.mp    = 0;
 
 			this._str  = 10; // 攻撃力
-			this._def  = 4; // 防御力
+			this._def  = 3; // 防御力
 			// this._int = 1; // 魔力
 			this._agi  = 0; // 素早さ
 			this._luk  = 0; // 運

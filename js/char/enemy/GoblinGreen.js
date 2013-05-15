@@ -18,7 +18,7 @@
 			this.maxmp = 0;
 			this.mp    = 0;
 
-			this._str  = 14; // 攻撃力
+			this._str  = 25; // 攻撃力
 			this._def  = 12; // 防御力
 			// this._int = 1; // 魔力
 			this._agi  = 0; // 素早さ
@@ -33,8 +33,11 @@
 
 			this.dropItemList = [
 				{
-					itemNum: 1,
-					random: 2
+					itemName: "刀",
+					random: 12
+				},{
+					itemName: "肉",
+					random: 5
 				}
 			];
 		}

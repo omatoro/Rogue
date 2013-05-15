@@ -204,12 +204,17 @@
         },
 
 		_move: function (app) {
+            // 移動速度を取得
+            var speed = 0;
+            if (this.isPlayer && app.currentScene.player) {
+                speed = app.currentScene.player.getSpeed();
+            }
 			// 移動方向の取得
             var angle = app.keyboard.getKeyAngle();
             if (angle !== null) {
                 this.velocity.setDegree(angle, 1);
                 this.velocity.x *= -1;
-                this.speed = 6;
+                this.speed = speed || 6;
             }
             else if (this.pad && this.pad.isTouching) {
                 var padAngle = this.pad.angle;
@@ -217,7 +222,7 @@
                 else                {padAngle = 360 - padAngle;}
                 this.velocity.setDegree(padAngle, 1);
                 this.velocity.x *= -1;
-                this.speed = 6;
+                this.speed = speed || 6;
             }
             // プレイヤーの移動
             if (this.isPlayer) {
@@ -331,6 +336,9 @@
                         // プレイヤーにアイテム追加(このままの処理だったらドロップアイテムインスタンスが生き続ける)
                         var player = app.currentScene.getChildByName("player");
                         player.addItem(getItem);
+
+                        // 音
+                        tm.sound.WebAudioManager.get("openTreasure").play();
                     }
                 }
             }

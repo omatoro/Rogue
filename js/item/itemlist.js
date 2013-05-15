@@ -12,6 +12,7 @@
 				summary: "両刃の短刀。",
 				dropImage: "dropWeapon",
 				status: {
+					dis: 1, // 射程距離
 					str: 2,
 					def: 0,
 					agi: 1,
@@ -25,6 +26,7 @@
 				summary: "片刃の短刀。多目的に使用する。",
 				dropImage: "dropWeapon",
 				status: {
+					dis: 1, // 射程距離
 					str: 1,
 					def: 0,
 					agi: 2,
@@ -38,6 +40,7 @@
 				summary: "刀身が湾曲しており、刀身の幅が広い。",
 				dropImage: "dropWeapon",
 				status: {
+					dis: 1, // 射程距離
 					str: 5,
 					def: 0,
 					agi: 3,
@@ -51,9 +54,24 @@
 				summary: "受け流し用の短剣",
 				dropImage: "dropWeapon",
 				status: {
+					dis: 1, // 射程距離
 					str: 3,
 					def: 2,
 					agi: 2,
+					luk: 0,
+					vit: 0,
+					dex: 0
+				}
+			},{
+				name: "ドラゴンの爪(緑)",
+				type: "shortsword",
+				summary: "ドラゴンの爪は鋭く、鉄より硬い。",
+				dropImage: "dropWeapon",
+				status: {
+					dis: 1, // 射程距離
+					str: 15,
+					def: 0,
+					agi: 4,
 					luk: 0,
 					vit: 0,
 					dex: 0
@@ -67,7 +85,8 @@
 				summary: "金属を打っただけの直刀。",
 				dropImage: "dropWeapon",
 				status: {
-					str: 2,
+					dis: 2.5, // 射程距離
+					str: 4,
 					def: 0,
 					agi: 0,
 					luk: 0,
@@ -80,7 +99,8 @@
 				summary: "片刃の直刀。",
 				dropImage: "dropWeapon",
 				status: {
-					str: 4,
+					dis: 2.5, // 射程距離
+					str: 7,
 					def: 0,
 					agi: 0,
 					luk: 0,
@@ -93,7 +113,8 @@
 				summary: "刺突用の剣。",
 				dropImage: "dropWeapon",
 				status: {
-					str: 4,
+					dis: 2.5, // 射程距離
+					str: 7,
 					def: 0,
 					agi: 2,
 					luk: 0,
@@ -106,7 +127,8 @@
 				summary: "曲刀。別名、三日月刀。",
 				dropImage: "dropWeapon",
 				status: {
-					str: 6,
+					dis: 2.5, // 射程距離
+					str: 12,
 					def: 0,
 					agi: 0,
 					luk: 0,
@@ -116,10 +138,11 @@
 			},{
 				name: "刀",
 				type: "longsword",
-				summary: "東洋の曲刀。",
+				summary: "東洋の直刀。",
 				dropImage: "dropWeapon",
 				status: {
-					str: 12,
+					dis: 2.5, // 射程距離
+					str: 18,
 					def: 0,
 					agi: 0,
 					luk: 0,
@@ -172,7 +195,20 @@
 				dropImage: "dropWeapon",
 				status: {
 					str: 0,
-					def: 5,
+					def: 7,
+					agi: -1,
+					luk: 0,
+					vit: 0,
+					dex: 0
+				}
+			},{
+				name: "鱗鎧",
+				type: "lightarmor",
+				summary: "動物の鱗を縫い込んだ軽鎧。",
+				dropImage: "dropWeapon",
+				status: {
+					str: 0,
+					def: 12,
 					agi: -1,
 					luk: 0,
 					vit: 0,
@@ -181,12 +217,12 @@
 			},{
 				name: "ドラゴンの鱗鎧(緑)",
 				type: "lightarmor",
-				summary: "動物の革を縫い込んだ軽鎧。",
+				summary: "ドラゴンの鱗を縫い込んだ軽鎧。とても軽い",
 				dropImage: "dropWeapon",
 				status: {
 					str: 1,
-					def: 8,
-					agi: 0,
+					def: 15,
+					agi: 1,
 					luk: 0,
 					vit: 0,
 					dex: 0
@@ -210,7 +246,7 @@
 				summary: "滋養強壮に。",
 				dropImage: "dropWeapon",
 				status: {
-					hp: 4
+					hp: 7
 				}
 			},{
 				name: "肉",
@@ -218,15 +254,15 @@
 				summary: "謎肉。",
 				dropImage: "dropWeapon",
 				status: {
-					hp: 5
+					hp: 10
 				}
 			},{
 				name: "モンスターの液体",
 				type: "medicine",
-				summary: "不思議な色をしている。",
+				summary: "不思議な色をしている。たまに動く。",
 				dropImage: "dropWeapon",
 				status: {
-					hp: 3
+					hp: 10
 				}
 			},{
 				name: "ポーション",
@@ -234,7 +270,7 @@
 				summary: "薬草を調合した飲み物。",
 				dropImage: "dropWeapon",
 				status: {
-					hp: 10
+					hp: 30
 				}
 			},
 		]

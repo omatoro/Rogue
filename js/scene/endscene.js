@@ -1,5 +1,5 @@
 /**
- * エンド画面(スコア表示)
+ * EndScene
  */
 (function(ns) {
 
@@ -22,7 +22,7 @@
 
         init : function(stairsNum, playerLevel, isClear) {
             if (isClear) {
-                RESULT_PARAM.score = "全" + stairsNum + "階制覇しました";
+                RESULT_PARAM.score = "全" + (stairsNum-1) + "階制覇しました";
             }
             else {
                 RESULT_PARAM.score = stairsNum + "階で死亡しました";
@@ -76,7 +76,7 @@
         // Backボタンを押したら、onpointingstart->インスタンス.dispatchEventにより
         // 以下onnextsceneイベントが実行される
         onnextscene : function () {
-            ns.app.replaceScene(ns.MainScene());
+            ns.app.replaceScene(ns.TitleScene());
             ns.MainScene.STAGE_NUMBER = 1;
         },
     });

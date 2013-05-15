@@ -100,6 +100,7 @@
 		getDropItem: function () {
 			// hpが0になったら死亡
 			if (this.hp <= 0) {
+				tm.sound.WebAudioManager.get("enemydown").play();
 				this.remove();
 				for (var i = 0; i < this.dropItemList.length; ++i) {
 					if (Math.rand(0, this.dropItemList[i].random) === 0) {
@@ -166,6 +167,9 @@
             // 攻撃時のアニメーション
             this.slash.position.set(attackScreenPosition.x, attackScreenPosition.y);
             this.slash.gotoAndPlay("slash");
+
+            // 音
+            tm.sound.WebAudioManager.get("playerdamage").play();
 
             // 攻撃するポイントを作成
             var attackMapPosition = this.position.clone().add(attackScreenPosition);
