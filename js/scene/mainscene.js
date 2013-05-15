@@ -114,7 +114,7 @@
             slash.position.set(ns.SCREEN_WIDTH/2 + 10, ns.SCREEN_HEIGHT/2 + 10);
 
             // 攻撃ボタン
-            var attackButton = tm.app.GlossyButton(100, 60, "green", "攻撃");
+            var attackButton = tm.app.GlossyButton(200, 160, "green", "攻撃");
             attackButton.position.set(ns.SCREEN_WIDTH-50-50, ns.SCREEN_HEIGHT-30-50);
             this.attackButton = attackButton;
             attackButton.addEventListener("pointingend", function(e) {
