@@ -338,7 +338,7 @@
                         player.addItem(getItem);
 
                         // 音
-                        tm.sound.WebAudioManager.get("openTreasure").play();
+                        tm.sound.SoundManager.get("openTreasure").play();
                     }
                 }
             }

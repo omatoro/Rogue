@@ -77,19 +77,19 @@ tm.preload(function() {
 	tm.graphics.TextureManager.add("dropTreasure", 	"rsc/item.png");
 
 	// 音
-	tm.sound.WebAudioManager.add("dungeon",			"rsc/sound/Dungeon02_Koya.mp3", 1);
-	tm.sound.WebAudioManager.add("levelup",			"rsc/sound/[Action]Chinese_blade1_Komori.ogg");
-	tm.sound.WebAudioManager.add("openTreasure",	"rsc/sound/[Action]Door01_Isooki.ogg");
-	tm.sound.WebAudioManager.add("downStairs",		"rsc/sound/[Action]Steps1_Isooki.ogg");
-	tm.sound.WebAudioManager.add("playerdamage",	"rsc/sound/[Effect]Attack6_panop.ogg");
-	tm.sound.WebAudioManager.add("enemydamage",		"rsc/sound/[Effect]SHUN_panop.ogg");
-	tm.sound.WebAudioManager.add("healing",			"rsc/sound/[Effect]Healing2_panop.ogg");
-	tm.sound.WebAudioManager.add("enemydown",		"rsc/sound/[Effect]SHUWAAAN3_panop.ogg");
-	tm.sound.WebAudioManager.add("playerdown",		"rsc/sound/[Effect]ZAZAZAZA_panop.ogg");
-	tm.sound.WebAudioManager.add("enter",			"rsc/sound/[System]Enter02_Koya.ogg");
-	tm.sound.WebAudioManager.add("openstatus",		"rsc/sound/[System]Click_Komori.ogg");
-	tm.sound.WebAudioManager.add("equip",			"rsc/sound/[Action]Switch2_Komori.ogg");
-	tm.sound.WebAudioManager.add("eat",				"rsc/sound/[Action]Eating_soup_Komori.ogg");
-	tm.sound.WebAudioManager.add("gameclear",		"rsc/sound/Fanfare01_Koya.mp3");
+	tm.sound.SoundManager.add("dungeon",		"rsc/sound/Dungeon02_Koya.mp3", 1);
+	tm.sound.SoundManager.add("levelup",		"rsc/sound/[Action]Chinese_blade1_Komori.ogg");
+	tm.sound.SoundManager.add("openTreasure",	"rsc/sound/[Action]Door01_Isooki.ogg");
+	tm.sound.SoundManager.add("downStairs",		"rsc/sound/[Action]Steps1_Isooki.ogg");
+	tm.sound.SoundManager.add("playerdamage",	"rsc/sound/[Effect]Attack6_panop.ogg");
+	tm.sound.SoundManager.add("enemydamage",	"rsc/sound/[Effect]SHUN_panop.ogg");
+	tm.sound.SoundManager.add("healing",		"rsc/sound/[Effect]Healing2_panop.ogg");
+	tm.sound.SoundManager.add("enemydown",		"rsc/sound/[Effect]SHUWAAAN3_panop.ogg");
+	tm.sound.SoundManager.add("playerdown",		"rsc/sound/[Effect]ZAZAZAZA_panop.ogg");
+	tm.sound.SoundManager.add("enter",			"rsc/sound/[System]Enter02_Koya.ogg");
+	tm.sound.SoundManager.add("openstatus",		"rsc/sound/[System]Click_Komori.ogg");
+	tm.sound.SoundManager.add("equip",			"rsc/sound/[Action]Switch2_Komori.ogg");
+	tm.sound.SoundManager.add("eat",			"rsc/sound/[Action]Eating_soup_Komori.ogg");
+	tm.sound.SoundManager.add("gameclear",		"rsc/sound/Fanfare01_Koya.mp3");
 
 });
