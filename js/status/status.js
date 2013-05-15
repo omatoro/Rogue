@@ -248,6 +248,12 @@
             });
 
 
+            // アイテム選択
+            var medicineName = "使用するアイテムを選択";
+            var medicineButton = tm.app.GlossyButton(280, 60, "gray", medicineName);
+            medicineButton.setPosition(200, 660);
+            this.medicineButton = medicineButton;
+
             // アイテム使用ボタン押下時の動作
             this.medicineButton.addEventListener("pointingend", function(e) {
                 // メニューボタンが押されたらプルダウンを行う
@@ -258,12 +264,7 @@
                         dropImage: null,
                         name: "使用アイテムを選択",
                         status: {
-                            str: 0,
-                            def: 0,
-                            agi: 0,
-                            luk: 0,
-                            vit: 0,
-                            dex: 0
+                            hp: 0,
                         }
                     }
                 }];
@@ -285,6 +286,7 @@
             parent.addChild(endButton);
             parent.addChild(weaponButton);
             parent.addChild(armorButton);
+            parent.addChild(medicineButton);
             parent.addChild(face);
 
             // ステータス表示
@@ -332,6 +334,19 @@
             // 食事
             if (this.medicineButton.returnedData) {
                 this.player.eatMedicine(this.medicineButton.returnedData);
+
+                var removeMedicineIte = 0
+                for (var i = 0; i < this.player.getItem().length; ++i) {
+                    var itemType = this.player.getItem()[i].type;
+                    if (itemType === "medicine") {
+                        ++removeMedicineIte;
+                        if (removeMedicineIte === this.medicineButton.ite) {
+                            // アイテム削除
+                            this.player.deleteItem(i);
+                        }
+                    }
+                }
+
                 this._drawStatus();
                 this.medicineButton.returnedData = null;
             }

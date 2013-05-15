@@ -54,6 +54,34 @@
 		getNextLevel: function ()	{ return this.nextLevelExp; },
 		isGameOver: function ()		{ return this._isGameOver; },
 
+		eatMedicine: function (item) {
+			if (!item.status) {
+				return ;
+			}
+			this.hp += item.status.hp || 0;
+			if (this.hp > this.maxhp) {
+				this.hp = this.maxhp;
+			}
+		},
+		getMedicine: function () {
+			if (this.equipedWeapon === null) {
+				var result = {
+					dropImage: null,
+					name: "装備無し",
+					status: {
+						str: 0,
+						def: 0,
+						agi: 0,
+						luk: 0,
+						vit: 0,
+						dex: 0
+					}
+				};
+				return result;
+			}
+			return this.equipedWeapon;
+		},
+
 		levelUp: function () {
 			// パラメータ上昇
 			this.maxhp += Math.rand(0, 10);
@@ -87,6 +115,10 @@
 
 		getItem: function () {
 			return this.item;
+		},
+
+		deleteItem: function (itemNum) {
+			this.item.splice(itemNum, 1);
 		},
 
 		equipWeapon: function (item) {
