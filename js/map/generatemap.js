@@ -1,5 +1,9 @@
 /**
- * マップ自動生成
+ * GenerateMap
+ * 
+ * 引数で縦横のマップチップ数を渡すと、部屋を繋げたデータ(配列)を返す
+ * 出力結果のデータは、歩ける場所：true 歩けない場所:falseとなる
+ * 直接マップチップを作成するわけではないので注意
  */
 (function(ns) {
 
@@ -10,9 +14,154 @@
     var COUPLE_VERTICAL = 0;
     var COUPLE_HORIZONAL = 1;
 
+    /**
+     * デバッグ用のマップ出力
+     */
+    var outConsole = function (mapArray) {
+        var line = "";
+        for (var i = 0; i < mapArray.length; ++i) {
+            for (var j = 0; j < mapArray[i].length; ++j) {
+                if (mapArray[i][j]) {
+                    line += "#";
+                }
+                else {
+                    line += ".";
+                }
+            }
+            console.log(line);
+            line = "";
+        }
+    };
+
+    /**
+     * マップチップの配置パターン
+     * 
+     * ・パターン１(3x3の四角がひとつのマップチップ)(全て空白の四角のマップチップは移動できない)
+     * 
+     * □□□ □□□ □□□ □□□ □□□
+     * □□□ □□□ □□□ □□□　□□□
+     * □□□ □□□ □□□ □□□　□□□
+     * 
+     * □□□ □□□ □□□ □□□ □□□
+     * □□□ □□□ □□□ □□□　□□□
+     * □□□ □□■ ■■■ ■□□　□□□
+     * 
+     * □□□ □□■ ■■■ ■□□ □□□
+     * □□□ □□■ ■■■ ■□□　□□□
+     * □□□ □□■ ■■■ ■□□　□□□
+     * 
+     * □□□ □□■ ■■■ ■□□　□□□
+     * □□□ □□□ □□□ □□□ □□□
+     * □□□ □□□ □□□ □□□　□□□
+     * 
+     * □□□ □□□ □□□ □□□ □□□
+     * □□□ □□□ □□□ □□□　□□□
+     * □□□ □□□ □□□ □□□　□□□
+     * 
+     * ・パターン2(3x3の四角がひとつのマップチップ)(全て空白の四角のマップチップは移動できない)
+     * 画像の端から別のマップチップが始まる
+     * 
+     * □□□ □□□ □□□ □□□ □□□
+     * □□□ □□□ □□□ □□□　□□□
+     * □□□ □□□ □□□ □□□　□□□
+     * 
+     * □□□ □□□ □□□ □□□ □□□
+     * □□□ □■■ ■■■ ■■□　□□□
+     * □□□ □■■ ■■■ ■■□　□□□
+     * 
+     * □□□ □■■ ■■■ ■■□ □□□
+     * □□□ □■■ ■■■ ■■□　□□□
+     * □□□ □■■ ■■■ ■■□　□□□
+     * 
+     * □□□ □■■ ■■■ ■■□　□□□
+     * □□□ □■■ ■■■ ■■□ □□□
+     * □□□ □□□ □□□ □□□　□□□
+     * 
+     * □□□ □□□ □□□ □□□ □□□
+     * □□□ □□□ □□□ □□□　□□□
+     * □□□ □□□ □□□ □□□　□□□
+     */
+     var MAP_PATTERN = [
+        {
+            name: "topleft",
+            id: 1,
+            pattern: [
+                [0,0,0],
+                [0,1,1],
+                [0,1,1]
+            ]
+        },{
+            name: "topcenter",
+            id: 2,
+            pattern: [
+                [0,0,0],
+                [1,1,1],
+                [1,1,1]
+            ]
+        },{
+            name: "topright",
+            id: 3,
+            pattern: [
+                [0,0,0],
+                [1,1,0],
+                [1,1,0]
+            ]
+        },{
+            name: "centerleft",
+            id: 4,
+            pattern: [
+                [1,1,0],
+                [1,1,0],
+                [1,1,0]
+            ]
+        },{
+            name: "centercenter",
+            id: 5,
+            pattern: [
+                [1,1,1],
+                [1,1,1],
+                [1,1,1]
+            ]
+        },{
+            name: "centerleft",
+            id: 6,
+            pattern: [
+                [0,1,1],
+                [0,1,1],
+                [0,1,1]
+            ]
+        },{
+            name: "bottomleft",
+            id: 7,
+            pattern: [
+                [0,1,1],
+                [0,1,1],
+                [0,0,0]
+            ]
+        },{
+            name: "bottomcenter",
+            id: 8,
+            pattern: [
+                [1,1,1],
+                [1,1,1],
+                [0,0,0]
+            ]
+        },{
+            name: "bottomright",
+            id: 9,
+            pattern: [
+                [1,1,0],
+                [1,1,0],
+                [0,0,0]
+            ]
+        }
+     ];
+
+
+
+
     ns.GenerateMap = tm.createClass({
 
-        // 引数は配列の数(マップチップの数)なので注意
         init: function (mapChipWidthNum, mapChipHeightNum) {
             // 生成する配列の初期化
             var map = [];
@@ -34,23 +183,64 @@
             this.coupleList = [];
 
             // 分割を開始
-            this.divideRect(this.addRect(0, 0, mapChipWidthNum - 1, mapChipHeightNum - 1));
+            this._divideRect(this._addRect(0, 0, mapChipWidthNum - 1, mapChipHeightNum - 1));
 
             // 部屋を作成
-            this.makeRoom();
+            this._makeRoom();
+
+            // 作成したマップの元データから、実際に使用する配列データを作成する
+            this._makeMap();
+
+            // デバッグ用にコンソールへ出力
+            outConsole(this.map);
+
+            // データを整形する
+            this._arrange();
+        },
+
+        /**
+         * データを整える
+         * true,falseのデータから必要な形式に変更する
+         */
+        _arrange: function () {
+            // マップ情報をfalseなら1, trueなら2に変更 ついでに歩ける場所の数も数えとく
+            var possibleWalkMapNum = 0;
+            // またまたついでにコリジョン用のデータをサクッと作る(歩ける:1, 壁:0)
+            var map = this.map;
+            var collision = [];
+            for (var i = 0; i < map.length; ++i) {
+                collision[i] = [];
+                for (var j = 0; j < map[i].length; ++j) {
+                    if (map[i][j]) {
+                        map[i][j] = 2;
+                        collision[i].push(1);
+                        ++possibleWalkMapNum;
+                    }
+                    else {
+                        map[i][j] = 1;
+                        collision[i].push(0);
+                    }
+                }
+            }
+
+            this.collision = collision;
+            this.walkMapNum = possibleWalkMapNum; // 歩ける場所の数
+        },
 
 
-
-
-            // test console
+        /**
+         * 指定した場所から場所への直線のフラグをtrueにする
+         */
+        _makeMap: function () {
+            var map = this.map;
             for (var i = 0; i < this.rectList.length; ++i) {
                 break;
                 var rect = this.rectList[i];
                 var k, l;
-                for (k = rect.lx, l = rect.ly; k <= rect.hx; ++k) {this.map[l][k] = true;}
-                for (k = rect.lx, l = rect.hy; k <= rect.hx; ++k) {this.map[l][k] = true;}
-                for (k = rect.lx, l = rect.ly; l <= rect.hy; l++) {this.map[l][k] = true;}
-                for (k = rect.hx, l = rect.ly; l <= rect.hy; l++) {this.map[l][k] = true;}
+                for (k = rect.lx, l = rect.ly; k <= rect.hx; ++k) {map[l][k] = true;}
+                for (k = rect.lx, l = rect.hy; k <= rect.hx; ++k) {map[l][k] = true;}
+                for (k = rect.lx, l = rect.ly; l <= rect.hy; ++l) {map[l][k] = true;}
+                for (k = rect.hx, l = rect.ly; l <= rect.hy; ++l) {map[l][k] = true;}
             }
             for (var i = 0; i < this.roomList.length; ++i) {
                 var room = this.roomList[i];
@@ -84,74 +274,46 @@
                         break;
                 }
             };
-            var line = "";
-            for (var i = 0; i < this.map.length; ++i) {
-                for (var j = 0; j < this.map[i].length; ++j) {
-                    if (map[i][j]) {
-                        line += "#";
-                    }
-                    else {
-                        line += ".";
-                    }
-                }
-                console.log(line);
-                line = "";
-            }
-
-            // マップ情報をfalseなら1, trueなら2に変更 ついでに歩ける場所の数も数えとく
-            var possibleWalkMapNum = 0;
-            // またまたついでにコリジョン用のデータをサクッと作る(歩ける:1, 壁:0)
-            var collision = [];
-            for (var i = 0; i < this.map.length; ++i) {
-                collision[i] = [];
-                for (var j = 0; j < this.map[i].length; ++j) {
-                    if (map[i][j]) {
-                        map[i][j] = 2;
-                        collision[i].push(1);
-                        ++possibleWalkMapNum;
-                    }
-                    else {
-                        map[i][j] = 1;
-                        collision[i].push(0);
-                    }
-                }
-            }
-
-            this.collision = collision;
-            this.walkMapNum = possibleWalkMapNum; // 歩ける場所の数
         },
 
+
+        /**
+         * 指定した場所から場所への直線のフラグをtrueにする
+         */
         _line: function (x0, y0, x1, y1) {
             var min_x = (x0 < x1) ? x0 : x1;
             var max_x = (x0 > x1) ? x0 : x1;
             var min_y = (y0 < y1) ? y0 : y1;
             var max_y = (y0 > y1) ? y0 : y1;
 
+            var map = this.map;
+
             if ((x0 <= x1) && (y0 >= y1)) {
-                for (var i = min_x; i <= max_x; ++i) {this.map[min_y][i] = true;}
-                for (var j = min_y; j <= max_y; ++j) {this.map[j][max_x] = true;}
+                for (var i = min_x; i <= max_x; ++i) {map[min_y][i] = true;}
+                for (var j = min_y; j <= max_y; ++j) {map[j][max_x] = true;}
                 return ;
             }
             if ((x0 > x1) && (y0 > y1)) {
-                for (var i = min_x; i <= max_x; ++i) {this.map[min_y][i] = true;}
-                for (var j = min_y; j <= max_y; ++j) {this.map[j][max_x] = true;}
+                for (var i = min_x; i <= max_x; ++i) {map[min_y][i] = true;}
+                for (var j = min_y; j <= max_y; ++j) {map[j][max_x] = true;}
                 return ;
             }
             if ((x0 > x1) && (y0 <= y1)) {
-                for (var i = min_x; i <= max_x; ++i) {this.map[min_y][i] = true;}
-                for (var j = min_y; j <= max_y; ++j) {this.map[j][min_x] = true;}
+                for (var i = min_x; i <= max_x; ++i) {map[min_y][i] = true;}
+                for (var j = min_y; j <= max_y; ++j) {map[j][min_x] = true;}
                 return ;
             }
             if ((x0 <= x1) && (y0 < y1)) {
-                for (var i = min_x; i <= max_x; ++i) {this.map[max_y][i] = true;}
-                for (var j = min_y; j <= max_y; ++j) {this.map[j][min_x] = true;}
+                for (var i = min_x; i <= max_x; ++i) {map[max_y][i] = true;}
+                for (var j = min_y; j <= max_y; ++j) {map[j][min_x] = true;}
                 return ;
             }
         },
 
-
-        // 区画を追加
-        addRect: function (lx, ly, hx, hy) {
+        /**
+         * 区画を追加
+         */
+        _addRect: function (lx, ly, hx, hy) {
             var rect = {
                 lx: lx, 
                 ly: ly, 
@@ -165,8 +327,10 @@
             return rect;
         },
 
-        // 区画を分割する
-        divideRect: function (parentRect) {
+        /**
+         * 区画を分割する
+         */
+        _divideRect: function (parentRect) {
             // 再帰終了の条件
             if (parentRect.hy - parentRect.ly <= RECT_NUM_MIN * 2) {
                 parentRect.done_split_v = true;
@@ -180,7 +344,7 @@
             }
 
             // 再帰用child
-            var childRect = this.addRect(parentRect.lx, parentRect.ly, parentRect.hx, parentRect.hy);
+            var childRect = this._addRect(parentRect.lx, parentRect.ly, parentRect.hx, parentRect.hy);
 
             // 縦に分割すべきか判断
             var rand = Math.rand(0, 1);
@@ -190,9 +354,9 @@
                 childRect.ly = divideY;
                 parentRect.done_split_v = true;
                 childRect.done_split_v = true;
-                this.addCouple(COUPLE_VERTICAL, parentRect, childRect);
-                this.divideRect(parentRect);
-                this.divideRect(childRect);
+                this._addCouple(COUPLE_VERTICAL, parentRect, childRect);
+                this._divideRect(parentRect);
+                this._divideRect(childRect);
                 return ;
             }
             // 横に分割すべきか判断
@@ -202,15 +366,17 @@
                 childRect.lx = divideX;
                 parentRect.done_split_h = true;
                 childRect.done_split_h = true;
-                this.addCouple(COUPLE_HORIZONAL, parentRect, childRect);
-                this.divideRect(parentRect);
-                this.divideRect(childRect);
+                this._addCouple(COUPLE_HORIZONAL, parentRect, childRect);
+                this._divideRect(parentRect);
+                this._divideRect(childRect);
                 return ;
             }
         },
 
-        // 部屋を追加
-        addRoom: function (lx, ly, hx, hy) {
+        /**
+         * 部屋を追加
+         */
+        _addRoom: function (lx, ly, hx, hy) {
             var room = {
                 lx: lx, ly: ly, hx: hx, hy: hy, room: {}
             };
@@ -218,8 +384,10 @@
             return room;
         },
 
-        // 部屋を作成
-        makeRoom: function () {
+        /**
+         * 部屋を作成
+         */
+        _makeRoom: function () {
             var x, y, w, h;
 
             for (var i = 0; i < this.rectList.length; ++i) {
@@ -229,21 +397,20 @@
                 x = Math.rand(rect.lx + MARGIN_BETWEEN_RECT_ROOM, rect.hx - MARGIN_BETWEEN_RECT_ROOM - w);
                 y = Math.rand(rect.ly + MARGIN_BETWEEN_RECT_ROOM, rect.hy - MARGIN_BETWEEN_RECT_ROOM - h);
 
-                rect.room = this.addRoom(x, y, x + w, y + h);
+                rect.room = this._addRoom(x, y, x + w, y + h);
             }
         },
 
-        // 部屋をつなげる
-        addCouple: function (v_or_h, rect0, rect1) {
+        /**
+         * 部屋をつなげる
+         */
+        _addCouple: function (v_or_h, rect0, rect1) {
             var couple = {
                 v_or_h: v_or_h, rect0: rect0, rect1: rect1
             };
             this.coupleList.push(couple);
             return couple;
         },
-
-        update: function () {
-        }
     });
 
 })(game);
