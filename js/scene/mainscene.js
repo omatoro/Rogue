@@ -218,7 +218,7 @@
             this.stairsNum.text   = ns.MainScene.STAGE_NUMBER + "階";
             this.statusLevel.text = "Lv." + this.player.getLevel();
             this.statusHP.text    = "HP " + this.player.getCurrentHP() + "/" + this.player.getMaxHP();
-            this.statusMP.text    = "MP " + this.player.getCurrentMP() + "/" + this.player.getMaxMP();
+            // this.statusMP.text    = "MP " + this.player.getCurrentMP() + "/" + this.player.getMaxMP();
         },
 
         update : function(app) {
