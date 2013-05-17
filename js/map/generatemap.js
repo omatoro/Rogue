@@ -81,81 +81,81 @@
      * □□□ □□□ □□□ □□□　□□□
      * □□□ □□□ □□□ □□□　□□□
      */
-     var MAP_PATTERN = [
-        {
-            name: "topleft",
-            id: 1,
-            pattern: [
-                [0,0,0],
-                [0,1,1],
-                [0,1,1]
-            ]
-        },{
-            name: "topcenter",
-            id: 2,
-            pattern: [
-                [0,0,0],
-                [1,1,1],
-                [1,1,1]
-            ]
-        },{
-            name: "topright",
-            id: 3,
-            pattern: [
-                [0,0,0],
-                [1,1,0],
-                [1,1,0]
-            ]
-        },{
-            name: "centerleft",
-            id: 4,
-            pattern: [
-                [1,1,0],
-                [1,1,0],
-                [1,1,0]
-            ]
-        },{
-            name: "centercenter",
-            id: 5,
-            pattern: [
-                [1,1,1],
-                [1,1,1],
-                [1,1,1]
-            ]
-        },{
-            name: "centerleft",
-            id: 6,
-            pattern: [
-                [0,1,1],
-                [0,1,1],
-                [0,1,1]
-            ]
-        },{
-            name: "bottomleft",
-            id: 7,
-            pattern: [
-                [0,1,1],
-                [0,1,1],
-                [0,0,0]
-            ]
-        },{
-            name: "bottomcenter",
-            id: 8,
-            pattern: [
-                [1,1,1],
-                [1,1,1],
-                [0,0,0]
-            ]
-        },{
-            name: "bottomright",
-            id: 9,
-            pattern: [
-                [1,1,0],
-                [1,1,0],
-                [0,0,0]
-            ]
-        }
-     ];
+     // var MAP_PATTERN = [
+     //    {
+     //        name: "topleft",
+     //        id: 1,
+     //        pattern: [
+     //            [0,0,0],
+     //            [0,1,1],
+     //            [0,1,1]
+     //        ]
+     //    },{
+     //        name: "topcenter",
+     //        id: 2,
+     //        pattern: [
+     //            [0,0,0],
+     //            [1,1,1],
+     //            [1,1,1]
+     //        ]
+     //    },{
+     //        name: "topright",
+     //        id: 3,
+     //        pattern: [
+     //            [0,0,0],
+     //            [1,1,0],
+     //            [1,1,0]
+     //        ]
+     //    },{
+     //        name: "centerleft",
+     //        id: 4,
+     //        pattern: [
+     //            [1,1,0],
+     //            [1,1,0],
+     //            [1,1,0]
+     //        ]
+     //    },{
+     //        name: "centercenter",
+     //        id: 5,
+     //        pattern: [
+     //            [1,1,1],
+     //            [1,1,1],
+     //            [1,1,1]
+     //        ]
+     //    },{
+     //        name: "centerleft",
+     //        id: 6,
+     //        pattern: [
+     //            [0,1,1],
+     //            [0,1,1],
+     //            [0,1,1]
+     //        ]
+     //    },{
+     //        name: "bottomleft",
+     //        id: 7,
+     //        pattern: [
+     //            [0,1,1],
+     //            [0,1,1],
+     //            [0,0,0]
+     //        ]
+     //    },{
+     //        name: "bottomcenter",
+     //        id: 8,
+     //        pattern: [
+     //            [1,1,1],
+     //            [1,1,1],
+     //            [0,0,0]
+     //        ]
+     //    },{
+     //        name: "bottomright",
+     //        id: 9,
+     //        pattern: [
+     //            [1,1,0],
+     //            [1,1,0],
+     //            [0,0,0]
+     //        ]
+     //    }
+     // ];
 
 
 
