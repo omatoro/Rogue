@@ -8,7 +8,12 @@
 
 		init: function () {
 			this.name = "player";
-			this.superInit("player");
+			// this.superInit("player");
+			this.superInit("player", {
+				width:  120/6,
+				height: 112/4,
+				count:  24,
+			}, 3);
 			// プレイヤーなので操作を受け付けるように設定
 			this.isInput = true;
 			this._isGameOver = false;
@@ -25,12 +30,14 @@
 			this._str = 1; // 攻撃力
 			this._def = 1; // 防御力
 			// this._int = 40; // 魔力
-			this._agi = 1; // 素早さ
+			this._agi = 4; // 素早さ
 			this._luk = 1; // 運
 			this._vit = 1; // 体力
 			this._dex = 1; // 器用さ
 
-			this.speed = 6;
+			this._aspd = 190; // 攻撃スピード
+
+			this.speed = 5;
 
 			this.exp = 0; // 取得経験値
 			this.nextLevelExp = 8;
@@ -57,24 +64,29 @@
 		isGameOver: function ()		{ return this._isGameOver; },
 
 		getSpeed: function () {
-			var agi = 0;
+			return this.speed + (this.getLastAGI()/2 |0);
+		},
+
+		getLastAGI: function () {
+			var agi = this.getAGI();
 			if (this.equipedWeapon !== null) {
 				agi += this.equipedWeapon.status.agi;
 			}
 			if (this.equipedArmor !== null) {
 				agi += this.equipedArmor.status.agi;
 			}
+			return agi;
+		},
 
-			// agiがマイナス値だと極端に減らす
-			var speed = 0;
-			if (agi < 0) {
-				speed += this.speed + (agi*2) + (this.agi/2 |0);
-			}
-			else {
-				speed += this.speed + ((this.agi+agi)/2 |0);
-			}
+		getAttackSpeed: function (fps) {
+			// 攻撃速度を計算
+			// var attackSpeed = this._aspd + Math.sqrt(this.getLastAGI() * (10 + 10/111) + (this.getDEX() * 9 / 49));
+			var attackSpeed = this._aspd + Math.sqrt(this.getLastAGI() * (150000) + (this.getDEX() * 9 / 49));
+			// attackSpeed = (attackSpeed > 190) ? 190 : (attackSpeed |0);
+			// attackSpeed = (attackSpeed > 250) ? 190 : (attackSpeed |0);
 
-			return speed;
+			// フレーム速に変換して返す
+			return fps / (attackSpeed / 150);
 		},
 
 		getDistanse: function () {
@@ -102,7 +114,7 @@
 			this._str  += Math.rand(0, 2); // 攻撃力
 			this._def  += Math.rand(0, 2); // 防御力
 			// this._int = 40; // 魔力
-			this._agi  += (Math.rand(0, 3) === 0) ? 1 : 0; // 素早さ
+			this._agi  += (Math.rand(0, 8) === 0) ? 1 : 0; // 素早さ
 			this._luk  += Math.rand(0, 2); // 運
 			this._vit  += Math.rand(0, 2); // 体力
 			this._dex  += Math.rand(0, 2); // 器用さ
@@ -119,7 +131,7 @@
 			this.exp += exp;
 			if (this.exp >= this.nextLevelExp) {
 				++this.level;
-				this.nextLevelExp = Math.ceil(this.nextLevelExp * 1.8);
+				this.nextLevelExp = Math.ceil(this.nextLevelExp * 1.4);
 				this.levelUp();
 				this.addExp(0);
 			}

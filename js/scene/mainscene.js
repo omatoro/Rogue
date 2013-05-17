@@ -117,7 +117,17 @@
             var attackButton = tm.app.GlossyButton(200, 160, "green", "攻撃");
             attackButton.position.set(ns.SCREEN_WIDTH-50-50, ns.SCREEN_HEIGHT-30-50);
             this.attackButton = attackButton;
-            attackButton.addEventListener("pointingend", function(e) {
+            var attackTiming = ns.Timing(150);
+            this.attackTiming = attackTiming;
+
+            attackButton.addEventListener("pointingmove", function(e) {
+                // タイミングが来たら攻撃可能
+                attackTiming.resetLimit(player.getAttackSpeed(e.app.fps));
+                if (attackTiming.is() === false) {
+                    return ;
+                }
+                attackTiming.reset();
+
                 // 攻撃の方向を調べる
                 var attackAngle = player.attack();
                 var attackVelocity = tm.geom.Vector2(0,0).setDegree(attackAngle, 1);
@@ -212,6 +222,9 @@
         },
 
         update : function(app) {
+            // 攻撃のアクティブバーのカウントアップ
+            this.attackTiming.update()
+
             // ステータスの描画
             this.drawStatus();
 

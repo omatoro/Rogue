@@ -86,9 +86,9 @@
 				dropImage: "dropWeapon",
 				status: {
 					dis: 2.5, // 射程距離
-					str: 4,
+					str: 10,
 					def: 0,
-					agi: 0,
+					agi: -2,
 					luk: 0,
 					vit: 0,
 					dex: 0
@@ -100,9 +100,9 @@
 				dropImage: "dropWeapon",
 				status: {
 					dis: 2.5, // 射程距離
-					str: 7,
+					str: 15,
 					def: 0,
-					agi: 0,
+					agi: -2,
 					luk: 0,
 					vit: 0,
 					dex: 0
@@ -114,9 +114,9 @@
 				dropImage: "dropWeapon",
 				status: {
 					dis: 2.5, // 射程距離
-					str: 7,
+					str: 4,
 					def: 0,
-					agi: 2,
+					agi: 0,
 					luk: 0,
 					vit: 0,
 					dex: 0
@@ -128,9 +128,9 @@
 				dropImage: "dropWeapon",
 				status: {
 					dis: 2.5, // 射程距離
-					str: 12,
+					str: 22,
 					def: 0,
-					agi: 0,
+					agi: -2,
 					luk: 0,
 					vit: 0,
 					dex: 0
@@ -142,9 +142,9 @@
 				dropImage: "dropWeapon",
 				status: {
 					dis: 2.5, // 射程距離
-					str: 18,
+					str: 36,
 					def: 0,
-					agi: 0,
+					agi: -4,
 					luk: 0,
 					vit: 0,
 					dex: 0

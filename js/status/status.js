@@ -38,29 +38,9 @@
                 align: "left"
             },{
                 type: "Label",
-                name: "statusName",
-                x: STATUS_LABEL_LEFT_PADDING,
-                y: STATUS_LABEL_UP_PADDING + (STATUS_LABEL_BETWEEN_PADDING),
-                width: ns.SCREEN_WIDTH,
-                fillStyle: "white",
-                text: " ",
-                fontSize: 25,
-                align: "left"
-            },{
-                type: "Label",
                 name: "statusHP",
                 x: STATUS_LABEL_LEFT_PADDING,
-                y: STATUS_LABEL_UP_PADDING + (STATUS_LABEL_BETWEEN_PADDING*2),
-                width: ns.SCREEN_WIDTH,
-                fillStyle: "white",
-                text: " ",
-                fontSize: 25,
-                align: "left"
-            },{
-                type: "Label",
-                name: "statusMP",
-                x: STATUS_LABEL_LEFT_PADDING,
-                y: STATUS_LABEL_UP_PADDING + (STATUS_LABEL_BETWEEN_PADDING*3),
+                y: STATUS_LABEL_UP_PADDING + (STATUS_LABEL_BETWEEN_PADDING*1),
                 width: ns.SCREEN_WIDTH,
                 fillStyle: "white",
                 text: " ",
@@ -70,7 +50,7 @@
                 type: "Label",
                 name: "statusEXP",
                 x: STATUS_LABEL_LEFT_PADDING,
-                y: STATUS_LABEL_UP_PADDING + (STATUS_LABEL_BETWEEN_PADDING*4),
+                y: STATUS_LABEL_UP_PADDING + (STATUS_LABEL_BETWEEN_PADDING*2),
                 width: ns.SCREEN_WIDTH,
                 fillStyle: "white",
                 text: " ",
@@ -80,7 +60,7 @@
                 type: "Label",
                 name: "statusSTR",
                 x: STATUS_LABEL_LEFT_PADDING,
-                y: STATUS_LABEL_UP_PADDING + (STATUS_LABEL_BETWEEN_PADDING*5),
+                y: STATUS_LABEL_UP_PADDING + (STATUS_LABEL_BETWEEN_PADDING*3),
                 width: ns.SCREEN_WIDTH,
                 fillStyle: "white",
                 text: " ",
@@ -90,7 +70,7 @@
                 type: "Label",
                 name: "statusDEF",
                 x: STATUS_LABEL_LEFT_PADDING,
-                y: STATUS_LABEL_UP_PADDING + (STATUS_LABEL_BETWEEN_PADDING*6),
+                y: STATUS_LABEL_UP_PADDING + (STATUS_LABEL_BETWEEN_PADDING*4),
                 width: ns.SCREEN_WIDTH,
                 fillStyle: "white",
                 text: " ",
@@ -100,37 +80,7 @@
                 type: "Label",
                 name: "statusAGI",
                 x: STATUS_LABEL_LEFT_PADDING,
-                y: STATUS_LABEL_UP_PADDING + (STATUS_LABEL_BETWEEN_PADDING*7),
-                width: ns.SCREEN_WIDTH,
-                fillStyle: "white",
-                text: " ",
-                fontSize: 25,
-                align: "left"
-            },{
-                type: "Label",
-                name: "statusLUK",
-                x: STATUS_LABEL_LEFT_PADDING,
-                y: STATUS_LABEL_UP_PADDING + (STATUS_LABEL_BETWEEN_PADDING*8),
-                width: ns.SCREEN_WIDTH,
-                fillStyle: "white",
-                text: " ",
-                fontSize: 25,
-                align: "left"
-            },{
-                type: "Label",
-                name: "statusVIT",
-                x: STATUS_LABEL_LEFT_PADDING,
-                y: STATUS_LABEL_UP_PADDING + (STATUS_LABEL_BETWEEN_PADDING*9),
-                width: ns.SCREEN_WIDTH,
-                fillStyle: "white",
-                text: " ",
-                fontSize: 25,
-                align: "left"
-            },{
-                type: "Label",
-                name: "statusDEX",
-                x: STATUS_LABEL_LEFT_PADDING,
-                y: STATUS_LABEL_UP_PADDING + (STATUS_LABEL_BETWEEN_PADDING*10),
+                y: STATUS_LABEL_UP_PADDING + (STATUS_LABEL_BETWEEN_PADDING*5),
                 width: ns.SCREEN_WIDTH,
                 fillStyle: "white",
                 text: " ",
@@ -297,16 +247,16 @@
 
         _drawStatus: function () {
             this.statusLevel.text = "Lv."  + this.player.getLevel();
-            this.statusName.text  = "Name";// + this.player.getLevel();
+            // this.statusName.text  = "Name";// + this.player.getLevel();
             this.statusEXP.text   = "EXP " + this.player.getEXP() + "/" + this.player.getNextLevel();
             this.statusHP.text    = "HP "  + this.player.getCurrentHP() + "/" + this.player.getMaxHP();
-            this.statusMP.text    = "MP "  + this.player.getCurrentMP() + "/" + this.player.getMaxMP();
-            this.statusSTR.text   = "STR " + this.player.getSTR() + " + " + (this.player.getWeapon().status.str + this.player.getArmor().status.str);
-            this.statusDEF.text   = "DEF " + this.player.getDEF() + " + " + (this.player.getWeapon().status.def + this.player.getArmor().status.def);
-            this.statusAGI.text   = "AGI " + this.player.getAGI() + " + " + (this.player.getWeapon().status.agi + this.player.getArmor().status.agi);
-            this.statusLUK.text   = "LUK " + this.player.getLUK() + " + " + (this.player.getWeapon().status.luk + this.player.getArmor().status.luk);
-            this.statusVIT.text   = "VIT " + this.player.getVIT() + " + " + (this.player.getWeapon().status.vit + this.player.getArmor().status.vit);
-            this.statusDEX.text   = "DEX " + this.player.getDEX() + " + " + (this.player.getWeapon().status.dex + this.player.getArmor().status.dex);
+            // this.statusMP.text    = "MP "  + this.player.getCurrentMP() + "/" + this.player.getMaxMP();
+            this.statusSTR.text   = "攻撃力 　　" + this.player.getSTR() + " + " + (this.player.getWeapon().status.str + this.player.getArmor().status.str);
+            this.statusDEF.text   = "防御力 　　" + this.player.getDEF() + " + " + (this.player.getWeapon().status.def + this.player.getArmor().status.def);
+            this.statusAGI.text   = "スピード " + this.player.getAGI() + " + " + (this.player.getWeapon().status.agi + this.player.getArmor().status.agi);
+            // this.statusLUK.text   = "LUK " + this.player.getLUK() + " + " + (this.player.getWeapon().status.luk + this.player.getArmor().status.luk);
+            // this.statusVIT.text   = "VIT " + this.player.getVIT() + " + " + (this.player.getWeapon().status.vit + this.player.getArmor().status.vit);
+            // this.statusDEX.text   = "DEX " + this.player.getDEX() + " + " + (this.player.getWeapon().status.dex + this.player.getArmor().status.dex);
         },
         
         _refresh: function() {

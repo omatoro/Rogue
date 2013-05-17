@@ -12,7 +12,7 @@
     var CHIP_HEIGHT    = IMAGE_HEIGHT/IMAGE_DIVIDE_ROW;
 
     // PLAYERの位置を微調整(マップのヒット判定を綺麗に行うため)
-    var PLAYER_POSITION_Y = 48;
+    var PLAYER_POSITION_Y = 36;
 
     // どこに衝突しているか
     var HIT_UP    = 0x01;
