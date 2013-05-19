@@ -57,7 +57,7 @@
             this.superInit();
 
             // コントローラーパッド
-            var pad = continuePad || tm.controller.Pad();
+            var pad = continuePad || tm.app.Pad();
             this.pad = pad;
             pad.position.set(80, ns.SCREEN_HEIGHT - 80);
 
